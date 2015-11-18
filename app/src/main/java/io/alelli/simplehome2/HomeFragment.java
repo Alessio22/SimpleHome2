@@ -1,0 +1,85 @@
+package io.alelli.simplehome2;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
+public class HomeFragment extends Fragment {
+
+    public HomeFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        Button btnLuci = (Button) view.findViewById(R.id.button_luci);
+        btnLuci.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new LuciFragment();
+                String title = getString(R.string.luci_title_fragment);
+                openFragment(title, fragment);
+            }
+        });
+
+        Button btnTemperature = (Button) view.findViewById(R.id.button_temperature);
+        btnTemperature.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new TemperatureFragment();
+                String title = getString(R.string.temperature_title_fragment);
+                openFragment(title, fragment);
+            }
+        });
+
+        Button btnAllarme = (Button) view.findViewById(R.id.button_allarme);
+        btnAllarme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Fragment fragment = new AllarmeFragment();
+                //String title = getString(R.string.allarme_title_fragment);
+                //openFragment(title, fragment);
+            }
+        });
+
+        return view;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    private void openFragment(String title, Fragment fragment) {
+        if (fragment != null) {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
+        }
+/*
+        // set the toolbar title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }*/
+    }
+
+
+}
