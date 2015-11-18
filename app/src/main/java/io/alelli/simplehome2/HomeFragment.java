@@ -1,13 +1,9 @@
 package io.alelli.simplehome2;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -50,13 +46,13 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button btnAllarme = (Button) view.findViewById(R.id.button_allarme);
-        btnAllarme.setOnClickListener(new View.OnClickListener() {
+        Button btnSettings = (Button) view.findViewById(R.id.button_settings);
+        btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Fragment fragment = new AllarmeFragment();
-                //String title = getString(R.string.allarme_title_fragment);
-                //openFragment(title, fragment);
+                Fragment fragment = new SettingsFragment();
+                String title = getString(R.string.settings_title_fragment);
+                openFragment(title, fragment);
             }
         });
 
