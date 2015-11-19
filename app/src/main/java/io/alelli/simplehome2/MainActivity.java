@@ -2,13 +2,11 @@ package io.alelli.simplehome2;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +20,11 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private Context context;
+
+    private Drawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,53 +35,92 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-/*
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-*/
+        // TODO elenco profili dal DB
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.side_nav_bar)
                 .addProfiles(
-                        new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(getResources()
+                        new ProfileDrawerItem().withName("Casa").withEmail("http://example.com/casa").withIcon(getResources()
                                 .getDrawable(R.drawable.profile6))
+                ).addProfiles(
+                        new ProfileDrawerItem().withName("Fuoricasa").withEmail("http://example.com/fuoricasa").withIcon(getResources()
+                                .getDrawable(R.drawable.profile3))
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                        Log.i(TAG, "onProfileChanged");
+                        // TODO set default profile
+
                         return false;
                     }
                 })
                 .build();
 
-        new DrawerBuilder()
-                .withAccountHeader(headerResult);
         //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem()
-                .withName(R.string.luci_nav);
+        PrimaryDrawerItem home = new PrimaryDrawerItem()
+                .withName(R.string.home_nav).withIcon(R.drawable.ic_home_24dp);
+        PrimaryDrawerItem luci = new PrimaryDrawerItem()
+                .withName(R.string.luci_nav).withIcon(R.drawable.ic_wb_incandescent_24dp);
+        PrimaryDrawerItem temperature = new PrimaryDrawerItem()
+                .withName(R.string.temperature_nav).withIcon(R.drawable.ic_ac_unit_black_24px);
+        PrimaryDrawerItem allarme = new PrimaryDrawerItem()
+                .withName(R.string.allarme_nav).withIcon(R.drawable.ic_security_black_24px)
+                .withSelectable(false);
+        PrimaryDrawerItem settings = new PrimaryDrawerItem()
+                .withName(R.string.settings_nav).withIcon(R.drawable.ic_settings_24dp);
 
         //create the drawer and remember the `Drawer` result object
-        Drawer result = new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(toolbar).withAccountHeader(headerResult)
-                .addDrawerItems(
-                        item1,
-                        new PrimaryDrawerItem()
-                )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // do something with the clicked item :D
-                        return true;
+        drawer = new DrawerBuilder()
+            .withActivity(this)
+            .withToolbar(toolbar)
+            .withAccountHeader(headerResult)
+            .addDrawerItems(home, luci, temperature, allarme, settings)
+            .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                @Override
+                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                    Fragment fragment = null;
+                    String title = getString(R.string.app_name);
+
+                    switch (position) {
+                        case 1:
+                            fragment = new HomeFragment();
+                            title = getString(R.string.home_title_frangment);
+                            break;
+                        case 2:
+                            fragment = new LuciFragment();
+                            title = getString(R.string.luci_title_fragment);
+                            break;
+                        case 3:
+                            fragment = new TemperatureFragment();
+                            title = getString(R.string.temperature_title_fragment);
+                            break;
+                        case 4:
+                            fragment = new AllarmeFragment();
+                            title  = getString(R.string.allarme_title_fragment);
+                            break;
+                        case 5:
+                            fragment = new SettingsFragment();
+                            title = getString(R.string.settings_title_fragment);
+                            break;
                     }
-                })
-                .build();
+
+                    if (fragment != null) {
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_frame, fragment);
+                        ft.commit();
+                    }
+
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setTitle(title);
+                    }
+
+                    drawer.closeDrawer();
+                    return true;
+                }
+            })
+            .build();
 
         // HomeFragment
         Fragment fragment = new HomeFragment();
@@ -93,9 +131,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //if (drawer.isDrawerOpen(GravityCompat.START)) {
+            //drawer.closeDrawer(GravityCompat.START);
+        if(drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
         } else {
             super.onBackPressed();
         }
@@ -112,9 +152,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame, new SettingsFragment());
-            ft.commit();
+            openFragment(new SettingsFragment());
 
             // set the toolbar title
             if (getSupportActionBar() != null) {
@@ -126,42 +164,10 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        Fragment fragment = null;
-        String title = getString(R.string.app_name);
-
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_luci) {
-            fragment = new LuciFragment();
-            title = getString(R.string.luci_title_fragment);
-        } else if (id == R.id.nav_temperatura) {
-            fragment = new TemperatureFragment();
-            title  = getString(R.string.temperature_title_fragment);
-        } else if (id == R.id.nav_allarme) {
-            //fragment = new AllarmeFragment();
-            //title  = getString(R.string.allarme_title_fragment);
-        } else if (id == R.id.nav_settings) {
-            fragment = new SettingsFragment();
-            title  = getString(R.string.settings_title_fragment);
-        }
-
-        if (fragment != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame, fragment);
-            ft.commit();
-        }
-
-        // set the toolbar title
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(title);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    private void openFragment(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
     }
+
 }
