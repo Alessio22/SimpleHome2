@@ -42,6 +42,7 @@ public class LuciFragment extends Fragment {
                 for (Luci luce: listaLuci) {
                     mAdapter.add(luce);
                 }
+                mAdapter.add(new Luci((mAdapter.getCount() + 1), "Stanza " + (mAdapter.getCount() + 1), false));
                 luciService.setAction(LuciIntentService.ACTION_STATO);
                 context.startService(luciService);
             }
@@ -50,7 +51,10 @@ public class LuciFragment extends Fragment {
                 String xml = intent.getStringExtra(LuciIntentService.EXTRA_LIST);
                 Log.i(TAG, xml);
 
-                mAdapter.add(new Luci(7, "Stanza " + (mAdapter.getCount() + 1), false));
+                String message = "Aggiornamento completato";
+                if(getView() != null) {
+                    Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                }
                 swipeContainer.setRefreshing(false);
             }
 
@@ -59,7 +63,9 @@ public class LuciFragment extends Fragment {
                 String nome = intent.getStringExtra(LuciIntentService.EXTRA_NOME);
 
                 String message = "Luce " + nome + " " + stato;
-                Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                if(getView() != null) {
+                    Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                }
             }
 
         }
@@ -125,7 +131,7 @@ public class LuciFragment extends Fragment {
     public void onDetach() {
         Log.i(TAG, "onDetach");
         super.onDetach();
-        //mListener = null;
+        context.unregisterReceiver(receiver);
     }
 
     public void setEmptyText(CharSequence emptyText) {

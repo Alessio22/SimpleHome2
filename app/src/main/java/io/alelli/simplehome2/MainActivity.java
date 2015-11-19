@@ -1,6 +1,5 @@
 package io.alelli.simplehome2;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,7 +21,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private Context context;
 
     private Drawer drawer;
 
@@ -30,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        context = this;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -53,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "onProfileChanged");
                         // TODO set default profile
 
+                        // HomeFragment
+                        openFragment(new HomeFragment(), null);
                         return false;
                     }
                 })
@@ -71,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem settings = new PrimaryDrawerItem()
                 .withName(R.string.settings_nav).withIcon(R.drawable.ic_settings_24dp);
 
-        //create the drawer and remember the `Drawer` result object
         drawer = new DrawerBuilder()
             .withActivity(this)
             .withToolbar(toolbar)
@@ -80,60 +77,34 @@ public class MainActivity extends AppCompatActivity {
             .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                 @Override
                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                    Fragment fragment = null;
-                    String title = getString(R.string.app_name);
-
                     switch (position) {
                         case 1:
-                            fragment = new HomeFragment();
-                            title = getString(R.string.home_title_frangment);
+                            openFragment(new HomeFragment(), null);
                             break;
                         case 2:
-                            fragment = new LuciFragment();
-                            title = getString(R.string.luci_title_fragment);
+                            openFragment(new LuciFragment(), getString(R.string.luci_title_fragment));
                             break;
                         case 3:
-                            fragment = new TemperatureFragment();
-                            title = getString(R.string.temperature_title_fragment);
+                            openFragment(new TemperatureFragment(), getString(R.string.temperature_title_fragment));
                             break;
                         case 4:
-                            fragment = new AllarmeFragment();
-                            title  = getString(R.string.allarme_title_fragment);
+                            //openFragment(new AllarmeFragment(), getString(R.string.allarme_title_fragment));
                             break;
                         case 5:
-                            fragment = new SettingsFragment();
-                            title = getString(R.string.settings_title_fragment);
+                            openFragment(new SettingsFragment(), getString(R.string.settings_title_fragment));
                             break;
                     }
-
-                    if (fragment != null) {
-                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.replace(R.id.content_frame, fragment);
-                        ft.commit();
-                    }
-
-                    if (getSupportActionBar() != null) {
-                        getSupportActionBar().setTitle(title);
-                    }
-
-                    drawer.closeDrawer();
                     return true;
                 }
             })
             .build();
 
         // HomeFragment
-        Fragment fragment = new HomeFragment();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, fragment);
-        ft.commit();
+        openFragment(new HomeFragment(), null);
     }
 
     @Override
     public void onBackPressed() {
-        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //if (drawer.isDrawerOpen(GravityCompat.START)) {
-            //drawer.closeDrawer(GravityCompat.START);
         if(drawer.isDrawerOpen()) {
             drawer.closeDrawer();
         } else {
@@ -152,22 +123,30 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            openFragment(new SettingsFragment());
-
-            // set the toolbar title
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle(getString(R.string.settings_title_fragment));
-            }
+            openFragment(new SettingsFragment(), getString(R.string.settings_title_fragment));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void openFragment(Fragment fragment) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, fragment);
-        ft.commit();
+    private void openFragment(Fragment fragment, String title) {
+        if(title == null || "".equals(title)) {
+            title = getString(R.string.app_name);
+        }
+
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            //ft.addToBackStack(title);
+            ft.commit();
+        }
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
+
+        drawer.closeDrawer();
     }
 
 }
