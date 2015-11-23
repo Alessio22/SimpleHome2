@@ -21,6 +21,7 @@
     <string name="dialog_new_profile_close">Chiudi</string>
     <string name="dialog_profilo_txt_etichetta">Etichetta:</string>
     <string name="dialog_profilo_txt_url">URL:</string>
+    <string name="dialog_profilo_txt_username">Username:</string>
     <string name="dialog_profilo_txt_password">Password:</string>
 
 </resources>

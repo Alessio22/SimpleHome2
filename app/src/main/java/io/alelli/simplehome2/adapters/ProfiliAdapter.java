@@ -48,7 +48,7 @@ public class ProfiliAdapter extends BaseAdapter {
         convertView = LayoutInflater.from(context).inflate(R.layout.profilo_list_item, parent, false);
 
         ImageView img = (ImageView) convertView.findViewById(R.id.profilo_img);
-        // TODO set rounded img
+        img.setImageBitmap(profilo.getImg());
         TextView etichetta = (TextView) convertView.findViewById(R.id.profilo_etichetta);
         etichetta.setText(profilo.getEtichetta());
         TextView url = (TextView) convertView.findViewById(R.id.profilo_url);
@@ -59,6 +59,11 @@ public class ProfiliAdapter extends BaseAdapter {
 
     public void add(Profilo profilo) {
         elencoProfili.add(profilo);
+        notifyDataSetChanged();
+    }
+
+    public void remove(int position) {
+        elencoProfili.remove(position);
         notifyDataSetChanged();
     }
 

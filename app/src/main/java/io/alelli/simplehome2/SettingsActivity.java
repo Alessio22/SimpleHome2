@@ -3,6 +3,7 @@ package io.alelli.simplehome2;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mAdapter = new ProfiliAdapter(context);
+
         mListView = (AbsListView) findViewById(R.id.profili_listView);
         mListView.setAdapter(mAdapter);
 
@@ -48,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 final EditText etichettaEditText = (EditText) layout.findViewById(R.id.dialog_profilo_etichetta);
                 final EditText urlEditText = (EditText) layout.findViewById(R.id.dialog_profilo_url);
+                final EditText usernameEditText = (EditText) layout.findViewById(R.id.dialog_profilo_username);
                 final EditText passwordEditText = (EditText) layout.findViewById(R.id.dialog_profilo_password);
 
                 builder.setView(layout);
@@ -59,8 +62,11 @@ public class SettingsActivity extends AppCompatActivity {
 
                         Profilo profilo = new Profilo();
                         profilo.setId(new Long(mAdapter.getCount() + 1));
+                        // TODO prenderla dal dialog
+                        profilo.setImg(BitmapFactory.decodeResource(context.getResources(), R.drawable.profile6));
                         profilo.setEtichetta(etichettaEditText.getText().toString());
                         profilo.setUrl(urlEditText.getText().toString());
+                        profilo.setUsername(usernameEditText.getText().toString());
                         profilo.setPassword(passwordEditText.getText().toString());
 
                         // TODO salvare sul db
@@ -83,6 +89,7 @@ public class SettingsActivity extends AppCompatActivity {
         // TODO prenderli dal db
         Profilo profilo = new Profilo();
         profilo.setId(1l);
+        profilo.setImg(BitmapFactory.decodeResource(context.getResources(), R.drawable.profile6));
         profilo.setEtichetta("Profilo " + profilo.getId());
         profilo.setUrl("http://" + profilo.getEtichetta().trim() + "/");
         mAdapter.add(profilo);
