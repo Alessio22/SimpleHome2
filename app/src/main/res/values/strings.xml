@@ -1,22 +1,19 @@
 <resources>
     <string name="app_name">SimpleHome 2</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Impostazioni</string>
-    <string name="settings_nav">Impostazioni</string>
-    <string name="settings_title_fragment">Impostazioni</string>
-
-    <string name="title_activity_main">Home</string>
-
+    <string name="home_nav">Home</string>
+    <string name="home_title_frangment">Home</string>
     <string name="luci_nav">Luci</string>
     <string name="luci_title_fragment">Luci</string>
     <string name="temperature_nav">Temperature</string>
     <string name="temperature_title_fragment">Temperature</string>
     <string name="allarme_nav">Allarme</string>
     <string name="allarme_title_fragment">Allarme</string>
+    <string name="settings_nav">Impostazioni</string>
+    <string name="settings_title_fragment">Impostazioni</string>
+    <string name="about_nav">Informazioni</string>
+    <string name="about_dialog_title">Informazioni</string>
+    <string name="about_dialog_close">Close</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
