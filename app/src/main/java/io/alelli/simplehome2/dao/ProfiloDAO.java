@@ -32,6 +32,7 @@ public class ProfiloDAO extends SQLiteOpenHelper {
 
     public ProfiloDAO(Context context) {
         super(context, DBNAME, null, 1);
+        this.context = context;
     }
 
     @Override
