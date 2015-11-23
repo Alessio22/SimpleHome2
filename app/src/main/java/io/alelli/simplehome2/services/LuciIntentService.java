@@ -40,7 +40,7 @@ public class LuciIntentService extends IntentService {
         final String nome = intent.getStringExtra(EXTRA_NOME);
         final String stato = intent.getStringExtra(EXTRA_STATO);
 
-        // TODO prenderla dalla configurazione
+        // TODO prenderla dal profilo attivo nel DB
         String result = null;
         API = "http://example.com/";
         USERNAME = "username";

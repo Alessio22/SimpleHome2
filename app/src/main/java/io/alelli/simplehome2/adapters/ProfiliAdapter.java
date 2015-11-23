@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -42,7 +44,16 @@ public class ProfiliAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Profilo profilo = getItem(position);
         convertView = LayoutInflater.from(context).inflate(R.layout.profilo_list_item, parent, false);
+
+        ImageView img = (ImageView) convertView.findViewById(R.id.profilo_img);
+        // TODO set rounded img
+        TextView etichetta = (TextView) convertView.findViewById(R.id.profilo_etichetta);
+        etichetta.setText(profilo.getEtichetta());
+        TextView url = (TextView) convertView.findViewById(R.id.profilo_url);
+        url.setText(profilo.getUrl());
+
         return convertView;
     }
 

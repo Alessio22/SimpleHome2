@@ -90,7 +90,7 @@ public class LuciFragment extends Fragment {
         intentFilter.addAction(LuciIntentService.BROADCAST_CHANGE);
         context.registerReceiver(receiver, intentFilter);
 
-        // TODO call service for get list Luci
+        // TODO da rimuovere
         mAdapter.add(new Luci(1, "Cucina", false));
         mAdapter.add(new Luci(2, "Ingresso",false));
         mAdapter.add(new Luci(3, "Salone",true));
@@ -113,7 +113,6 @@ public class LuciFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // TODO call service for get list Luci
                 luciService.setAction(LuciIntentService.ACTION_STATO);
                 context.startService(luciService);
 

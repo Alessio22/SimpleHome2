@@ -65,7 +65,6 @@ public class LuciAdapter extends BaseAdapter {
             String nomeLuce = (String) switchStato.getText();
             Log.i(TAG, "idLuce: " + (isChecked ? "ON" : "OFF"));
 
-            // TODO call service for cange state
             luciService.setAction(LuciIntentService.ACTION_CHANGE);
             luciService.putExtra(LuciIntentService.EXTRA_ID, idLuce);
             luciService.putExtra(LuciIntentService.EXTRA_NOME, nomeLuce);

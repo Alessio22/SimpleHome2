@@ -10,10 +10,9 @@
     <string name="allarme_nav">Allarme</string>
     <string name="allarme_title_fragment">Allarme</string>
     <string name="settings_nav">Impostazioni</string>
-    <string name="settings_title_fragment">Impostazioni</string>
+    <string name="title_activity_settings">Impostazioni</string>
     <string name="about_nav">Informazioni</string>
     <string name="about_dialog_title">Informazioni</string>
     <string name="about_dialog_close">Close</string>
-    <string name="title_activity_settings">SettingsActivity</string>
 
 </resources>
