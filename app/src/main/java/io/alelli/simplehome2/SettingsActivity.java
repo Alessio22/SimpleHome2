@@ -15,7 +15,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+
 import io.alelli.simplehome2.adapters.ProfiliAdapter;
+import io.alelli.simplehome2.dao.ProfiloDAO;
 import io.alelli.simplehome2.models.Profilo;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -25,12 +28,15 @@ public class SettingsActivity extends AppCompatActivity {
     private AbsListView mListView;
     private ProfiliAdapter mAdapter;
 
+    private ProfiloDAO profiloDAO;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
         context = this;
+        profiloDAO = new ProfiloDAO(context);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -62,15 +68,16 @@ public class SettingsActivity extends AppCompatActivity {
 
                         Profilo profilo = new Profilo();
                         profilo.setId(new Long(mAdapter.getCount() + 1));
-                        // TODO prenderla dal dialog
+                        // TODO prendere l'immagine dal dialog
                         profilo.setImg(BitmapFactory.decodeResource(context.getResources(), R.drawable.profile6));
                         profilo.setEtichetta(etichettaEditText.getText().toString());
                         profilo.setUrl(urlEditText.getText().toString());
                         profilo.setUsername(usernameEditText.getText().toString());
                         profilo.setPassword(passwordEditText.getText().toString());
 
-                        // TODO salvare sul db
-                        mAdapter.add(profilo);
+                        if(profiloDAO.insert(profilo)) {
+                            mAdapter.add(profilo);
+                        }
                     }
                 });
 
@@ -84,15 +91,11 @@ public class SettingsActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // TODO prenderli dal db
-        Profilo profilo = new Profilo();
-        profilo.setId(1l);
-        profilo.setImg(BitmapFactory.decodeResource(context.getResources(), R.drawable.profile6));
-        profilo.setEtichetta("Profilo " + profilo.getId());
-        profilo.setUrl("http://" + profilo.getEtichetta().trim() + "/");
-        mAdapter.add(profilo);
+        ArrayList<Profilo> profili = profiloDAO.findAll();
+        mAdapter.addAll(profili);
     }
 
 }

@@ -62,6 +62,11 @@ public class ProfiliAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void addAll(ArrayList<Profilo> profili) {
+        elencoProfili.addAll(profili);
+        notifyDataSetChanged();
+    }
+
     public void remove(int position) {
         elencoProfili.remove(position);
         notifyDataSetChanged();

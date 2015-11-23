@@ -29,6 +29,11 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import java.util.ArrayList;
+
+import io.alelli.simplehome2.dao.ProfiloDAO;
+import io.alelli.simplehome2.models.Profilo;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static Context context;
@@ -50,17 +55,19 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // TODO elenco profili dal DB
+        ArrayList<Profilo> profili = new ProfiloDAO(context).findAll();
+        IProfile[] profiles = new IProfile[profili.size()];
+        for (int i = 0; i < profili.size(); i++) {
+            profiles[i] = new ProfileDrawerItem()
+                    .withName(profili.get(i).getEtichetta())
+                    .withEmail(profili.get(i).getUrl())
+                    .withIcon(getResources().getDrawable(R.drawable.profile6));
+        }
+
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.side_nav_bar)
-                .addProfiles(
-                        new ProfileDrawerItem().withName("Casa").withEmail("http://example.com/casa").withIcon(getResources()
-                                .getDrawable(R.drawable.profile6))
-                ).addProfiles(
-                        new ProfileDrawerItem().withName("Fuoricasa").withEmail("http://example.com/fuoricasa").withIcon(getResources()
-                                .getDrawable(R.drawable.profile3))
-                )
+                .addProfiles(profiles)
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
