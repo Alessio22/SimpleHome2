@@ -5,6 +5,7 @@
         <item android:id="@+id/nav_luci" android:title="@string/luci_nav" />
         <item android:id="@+id/nav_temperatura"  android:title="@string/temperature_nav" />
         <item android:id="@+id/nav_allarme" android:title="@string/allarme_nav" />
+        <item android:id="@+id/nav_settings" android:title="@string/settings_nav" />
     </group>
 
 </menu>
