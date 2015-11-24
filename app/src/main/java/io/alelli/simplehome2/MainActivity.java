@@ -1,5 +1,10 @@
 package io.alelli.simplehome2;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,40 +19,63 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import java.util.List;
+
+import io.alelli.simplehome2.dao.ProfiloDAO;
+import io.alelli.simplehome2.models.Profilo;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-
+    private static Context context;
     private Drawer drawer;
+    private Toolbar toolbar;
+
+    private ProfiloDAO profiloDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        profiloDAO = new ProfiloDAO(prefs);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // TODO elenco profili dal DB
+        List<Profilo> profili = profiloDAO.findAll();
+        if(profili.size() == 0) {
+            // TODO start WelcomeActivity
+        }
+        IProfile[] profiles = new IProfile[profili.size()];
+        for (int i = 0; i < profili.size(); i++) {
+            ProfileDrawerItem profile = new ProfileDrawerItem()
+                    .withIdentifier(profili.get(i).getId().intValue())
+                    .withName(profili.get(i).getEtichetta())
+                    .withEmail(profili.get(i).getUrl())
+                    .withNameShown(true)
+                    .withIcon(getResources().getDrawable(R.drawable.logo));
+            profiles[i] = profile;
+        }
+
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.side_nav_bar)
-                .addProfiles(
-                        new ProfileDrawerItem().withName("Casa").withEmail("http://example.com/casa").withIcon(getResources()
-                                .getDrawable(R.drawable.profile6))
-                ).addProfiles(
-                        new ProfileDrawerItem().withName("Fuoricasa").withEmail("http://example.com/fuoricasa").withIcon(getResources()
-                                .getDrawable(R.drawable.profile3))
-                )
+                .addProfiles(profiles)
+                //.withProfileImagesVisible(false)
+                //.withProfileImagesClickable(false)
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        Log.i(TAG, "onProfileChanged");
-                        // TODO set default profile
+                        profiloDAO.activateProfile(new Long(profile.getIdentifier()));
 
                         // HomeFragment
                         openFragment(new HomeFragment(), null);
@@ -56,48 +84,72 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
 
+        Long idProfiloAttivo = profiloDAO.getIdProfileActive();
+        Log.i(TAG, "idProfiloAttivo: " + idProfiloAttivo);
+        headerResult.setActiveProfile(idProfiloAttivo.intValue());
+
         //if you want to update the items at a later time it is recommended to keep it in a variable
         PrimaryDrawerItem home = new PrimaryDrawerItem()
-                .withName(R.string.home_nav).withIcon(R.drawable.ic_home_24dp);
+                .withName(R.string.home_nav)
+                .withIcon(R.drawable.ic_home_24dp);
         PrimaryDrawerItem luci = new PrimaryDrawerItem()
-                .withName(R.string.luci_nav).withIcon(R.drawable.ic_wb_incandescent_24dp);
+                .withName(R.string.luci_nav)
+                .withIcon(R.drawable.ic_wb_incandescent_24dp);
         PrimaryDrawerItem temperature = new PrimaryDrawerItem()
-                .withName(R.string.temperature_nav).withIcon(R.drawable.ic_ac_unit_black_24px);
-        PrimaryDrawerItem allarme = new PrimaryDrawerItem()
-                .withName(R.string.allarme_nav).withIcon(R.drawable.ic_security_black_24px)
-                .withSelectable(false);
-        PrimaryDrawerItem settings = new PrimaryDrawerItem()
-                .withName(R.string.settings_nav).withIcon(R.drawable.ic_settings_24dp);
+                .withName(R.string.temperature_nav)
+                .withIcon(R.drawable.ic_ac_unit_black_24px);
+        PrimaryDrawerItem allarme = new PrimaryDrawerItem().withSelectable(false)
+                .withName(R.string.allarme_nav)
+                .withIcon(R.drawable.ic_security_black_24px);
+        SecondaryDrawerItem settings = new SecondaryDrawerItem()
+                .withName(R.string.settings_nav).withTextColorRes(R.color.secondary_text)
+                .withIcon(R.drawable.ic_settings_24dp);
+        SecondaryDrawerItem about = new SecondaryDrawerItem()
+                .withName(R.string.about_nav).withTextColorRes(R.color.secondary_text)
+                .withIcon(R.drawable.ic_info_24dp);
 
         drawer = new DrawerBuilder()
-            .withActivity(this)
-            .withToolbar(toolbar)
-            .withAccountHeader(headerResult)
-            .addDrawerItems(home, luci, temperature, allarme, settings)
-            .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                @Override
-                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                    switch (position) {
-                        case 1:
-                            openFragment(new HomeFragment(), null);
-                            break;
-                        case 2:
-                            openFragment(new LuciFragment(), getString(R.string.luci_title_fragment));
-                            break;
-                        case 3:
-                            openFragment(new TemperatureFragment(), getString(R.string.temperature_title_fragment));
-                            break;
-                        case 4:
-                            //openFragment(new AllarmeFragment(), getString(R.string.allarme_title_fragment));
-                            break;
-                        case 5:
-                            openFragment(new SettingsFragment(), getString(R.string.settings_title_fragment));
-                            break;
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withAccountHeader(headerResult)
+                .addDrawerItems(home, luci, temperature, allarme, new DividerDrawerItem(), settings, about)
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        switch (position) {
+                            case 1:
+                                openFragment(new HomeFragment(), null);
+                                break;
+                            case 2:
+                                openFragment(new LuciFragment(), getString(R.string.luci_title_fragment));
+                                break;
+                            case 3:
+                                openFragment(new TemperatureFragment(), getString(R.string.temperature_title_fragment));
+                                break;
+                            case 4:
+                                //openFragment(new AllarmeFragment(), getString(R.string.allarme_title_fragment));
+                                break;
+                            case 6:
+                                final Intent intent = new Intent(context, SettingsActivity.class);
+                                startActivity(intent);
+                                break;
+                            case 7:
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setTitle(R.string.about_dialog_title);
+                                builder.setPositiveButton(R.string.about_dialog_close, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        Log.i(TAG, "Dialog Ok");
+                                    }
+                                });
+
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                                break;
+                        }
+                        return true;
                     }
-                    return true;
-                }
-            })
-            .build();
+                })
+                .build();
 
         // HomeFragment
         openFragment(new HomeFragment(), null);
@@ -105,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(drawer.isDrawerOpen()) {
+        if (drawer.isDrawerOpen()) {
             drawer.closeDrawer();
         } else {
             super.onBackPressed();
@@ -123,7 +175,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            openFragment(new SettingsFragment(), getString(R.string.settings_title_fragment));
+            final Intent intent = new Intent(context, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -131,14 +184,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openFragment(Fragment fragment, String title) {
-        if(title == null || "".equals(title)) {
+        if (title == null || "".equals(title)) {
             title = getString(R.string.app_name);
         }
 
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
-            //ft.addToBackStack(title);
             ft.commit();
         }
 
