@@ -30,6 +30,10 @@ public class ProfiloDAO {
         return Profilo.listAll(Profilo.class);
     }
 
+    public Profilo findById(Long id) {
+        return Profilo.findById(Profilo.class, id);
+    }
+
     public void insert(Profilo profilo) {
         profilo.save();
         Log.i(TAG, "Profilo.count( " + Profilo.count(Profilo.class, null, null));

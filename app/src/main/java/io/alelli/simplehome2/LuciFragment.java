@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -15,9 +16,14 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import io.alelli.simplehome2.adapters.LuciAdapter;
+import io.alelli.simplehome2.dao.ProfiloDAO;
 import io.alelli.simplehome2.models.Luci;
 import io.alelli.simplehome2.services.LuciIntentService;
 
@@ -25,6 +31,7 @@ public class LuciFragment extends Fragment {
     private static final String TAG = "LuciFragment";
     private static Context context;
     private Intent luciService;
+    private Long idProfiloAttivo;
 
     private AbsListView mListView;
     private LuciAdapter mAdapter;
@@ -36,13 +43,12 @@ public class LuciFragment extends Fragment {
             Log.i(TAG, intent.getAction());
 
             if(LuciIntentService.BROADCAST_LIST.equals(intent.getAction())) {
-                String xml = intent.getStringExtra(LuciIntentService.EXTRA_LIST);
-                Log.i(TAG, xml);
-                ArrayList<Luci> listaLuci = xmlToList(xml);
+                String json = intent.getStringExtra(LuciIntentService.EXTRA_LIST);
+                Type listType = new TypeToken<ArrayList<Luci>>() {}.getType();
+                ArrayList<Luci> listaLuci = new Gson().fromJson(json, listType);
                 for (Luci luce: listaLuci) {
                     mAdapter.add(luce);
                 }
-                mAdapter.add(new Luci((mAdapter.getCount() + 1), "Stanza " + (mAdapter.getCount() + 1), false));
                 luciService.setAction(LuciIntentService.ACTION_STATO);
                 context.startService(luciService);
             }
@@ -77,11 +83,15 @@ public class LuciFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         context = getContext();
+        final SharedPreferences prefs = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+        ProfiloDAO profiloDAO = new ProfiloDAO(prefs);
+        idProfiloAttivo = profiloDAO.getIdProfileActive();
 
         mAdapter = new LuciAdapter(context);
 
         luciService = new Intent(context, LuciIntentService.class);
         luciService.setAction(LuciIntentService.ACTION_LIST);
+        luciService.putExtra(LuciIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
         context.startService(luciService);
 
         final IntentFilter intentFilter = new IntentFilter();
@@ -89,15 +99,6 @@ public class LuciFragment extends Fragment {
         intentFilter.addAction(LuciIntentService.BROADCAST_STATO);
         intentFilter.addAction(LuciIntentService.BROADCAST_CHANGE);
         context.registerReceiver(receiver, intentFilter);
-
-        // TODO da rimuovere
-        mAdapter.add(new Luci(1, "Cucina", false));
-        mAdapter.add(new Luci(2, "Ingresso",false));
-        mAdapter.add(new Luci(3, "Salone",true));
-        mAdapter.add(new Luci(4, "Balcone",false));
-        mAdapter.add(new Luci(5, "Camera", true));
-        mAdapter.add(new Luci(6, "Bagno", false));
-        mAdapter.add(new Luci(7, "Scale", false));
     }
 
     @Override
@@ -142,9 +143,4 @@ public class LuciFragment extends Fragment {
         }
     }
 
-    private ArrayList<Luci> xmlToList(String xml) {
-        ArrayList<Luci> listaLuci = new ArrayList<>();
-
-        return listaLuci;
-    }
 }
