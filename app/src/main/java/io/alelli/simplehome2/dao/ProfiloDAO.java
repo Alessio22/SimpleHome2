@@ -19,6 +19,8 @@ import io.alelli.simplehome2.models.Profilo;
 public class ProfiloDAO extends SQLiteOpenHelper {
     private static final String TAG = "ProfiloDAO";
 
+    public static final String ACTIVE_PROFILE = "active.profile";
+
     static final String DBNAME = "simpleHomeDB";
     static final String TABLE_PROFILO="profilo";
     static final String TABLE_PROFILO_ID="id";
@@ -27,6 +29,14 @@ public class ProfiloDAO extends SQLiteOpenHelper {
     static final String TABLE_PROFILO_USERNAME="username";
     static final String TABLE_PROFILO_PASSWORD="password";
     static final String TABLE_PROFILO_IMG="img";
+
+    final static String[] COLUMNS = {
+                                TABLE_PROFILO_ID,
+                                TABLE_PROFILO_ETICHETTA,
+                                TABLE_PROFILO_URL,
+                                TABLE_PROFILO_USERNAME,
+                                TABLE_PROFILO_PASSWORD
+                            };
 
     private Context context;
 
@@ -55,8 +65,7 @@ public class ProfiloDAO extends SQLiteOpenHelper {
 
     public ArrayList<Profilo> findAll() {
         ArrayList<Profilo> profili = new ArrayList<>();
-        SQLiteDatabase db=this.getReadableDatabase();
-        Cursor cur = db.rawQuery("SELECT * FROM " + TABLE_PROFILO, new String [] {});
+        Cursor cur = this.getReadableDatabase().query(TABLE_PROFILO, COLUMNS, null, new String[]{}, null, null, null);
         while (cur.moveToNext()) {
             Profilo profilo = new Profilo();
             profilo.setId(cur.getLong(cur.getColumnIndex(TABLE_PROFILO_ID)));
@@ -65,7 +74,7 @@ public class ProfiloDAO extends SQLiteOpenHelper {
             profilo.setUsername(cur.getString(cur.getColumnIndex(TABLE_PROFILO_USERNAME)));
             profilo.setPassword(cur.getString(cur.getColumnIndex(TABLE_PROFILO_PASSWORD)));
             // TODO prenderla dal db
-            profilo.setImg(BitmapFactory.decodeResource(context.getResources(), R.drawable.profile6));
+            profilo.setImg(BitmapFactory.decodeResource(context.getResources(), R.raw.profile6));
             profili.add(profilo);
         }
         return profili;

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -40,8 +41,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         context = this;
+
+        final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -50,18 +52,13 @@ public class MainActivity extends AppCompatActivity {
         if(profili.size() == 0) {
             // TODO start WelcomeActivity
         }
-        // TODO query db per recuperare l'id del profilo attivo
-        Long idProfiloAttivo = 1l;
         IProfile[] profiles = new IProfile[profili.size()];
         for (int i = 0; i < profili.size(); i++) {
             ProfileDrawerItem profile = new ProfileDrawerItem()
+                    .withIdentifier(profili.get(i).getId().intValue())
                     .withName(profili.get(i).getEtichetta())
                     .withEmail(profili.get(i).getUrl())
-                    .withIcon(getResources().getDrawable(R.drawable.profile6));
-
-            if(profili.get(i).getId() == idProfiloAttivo) {
-                profile.withSetSelected(true);
-            }
+                    .withIcon(getResources().getResourceName(R.raw.profile6));
             profiles[i] = profile;
         }
 
@@ -72,15 +69,22 @@ public class MainActivity extends AppCompatActivity {
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        Log.i(TAG, "onProfileChanged");
+                        Log.i(TAG, "onProfileChanged id: " + profile.getIdentifier());
                         // TODO set profilo attivo
-
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putInt(ProfiloDAO.ACTIVE_PROFILE, profile.getIdentifier());
+                        editor.commit();
                         // HomeFragment
                         openFragment(new HomeFragment(), null);
                         return false;
                     }
                 })
                 .build();
+
+        // TODO query db per recuperare l'id del profilo attivo
+        Integer idProfiloAttivo = prefs.getInt(ProfiloDAO.ACTIVE_PROFILE, 0);
+        Log.i(TAG, "idProfiloAttivo: " + idProfiloAttivo);
+        headerResult.setActiveProfile(idProfiloAttivo);
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
         PrimaryDrawerItem home = new PrimaryDrawerItem()

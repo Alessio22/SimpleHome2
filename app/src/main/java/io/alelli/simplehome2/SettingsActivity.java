@@ -69,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
                         Profilo profilo = new Profilo();
                         profilo.setId(new Long(mAdapter.getCount() + 1));
                         // TODO prendere l'immagine dal dialog
-                        profilo.setImg(BitmapFactory.decodeResource(context.getResources(), R.drawable.profile6));
+                        profilo.setImg(BitmapFactory.decodeResource(context.getResources(), R.raw.profile6));
                         profilo.setEtichetta(etichettaEditText.getText().toString());
                         profilo.setUrl(urlEditText.getText().toString());
                         profilo.setUsername(usernameEditText.getText().toString());
