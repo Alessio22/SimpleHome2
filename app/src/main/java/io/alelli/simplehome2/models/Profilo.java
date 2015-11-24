@@ -1,24 +1,28 @@
 package io.alelli.simplehome2.models;
 
-import android.graphics.Bitmap;
+import android.content.Context;
+
+import com.orm.SugarRecord;
 
 /**
  * Created by Alessio on 23/11/2015.
  */
-public class Profilo {
-    private Long id;
+public class Profilo extends SugarRecord<Profilo> {
     private String etichetta;
     private String url;
     private String username;
     private String password;
-    private Bitmap img;
 
-    public Long getId() {
-        return id;
+    public Profilo() {
+        super();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Profilo(Context context, String etichetta, String url, String username, String password) {
+        super();
+        this.etichetta = etichetta;
+        this.url = url;
+        this.username = username;
+        this.password = password;
     }
 
     public String getEtichetta() {
@@ -53,11 +57,4 @@ public class Profilo {
         this.password = password;
     }
 
-    public Bitmap getImg() {
-        return img;
-    }
-
-    public void setImg(Bitmap img) {
-        this.img = img;
-    }
 }

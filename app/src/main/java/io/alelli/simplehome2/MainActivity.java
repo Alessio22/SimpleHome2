@@ -26,7 +26,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import io.alelli.simplehome2.dao.ProfiloDAO;
 import io.alelli.simplehome2.models.Profilo;
@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private Drawer drawer;
     private Toolbar toolbar;
 
+    private ProfiloDAO profiloDAO;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +46,12 @@ public class MainActivity extends AppCompatActivity {
         context = this;
 
         final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        profiloDAO = new ProfiloDAO(prefs);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ArrayList<Profilo> profili = new ProfiloDAO(context).findAll();
+        List<Profilo> profili = profiloDAO.findAll();
         if(profili.size() == 0) {
             // TODO start WelcomeActivity
         }
@@ -58,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
                     .withIdentifier(profili.get(i).getId().intValue())
                     .withName(profili.get(i).getEtichetta())
                     .withEmail(profili.get(i).getUrl())
-                    .withIcon(getResources().getResourceName(R.raw.profile6));
+                    .withNameShown(true)
+                    .withIcon(getResources().getDrawable(R.drawable.logo));
             profiles[i] = profile;
         }
 
@@ -66,14 +70,13 @@ public class MainActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.side_nav_bar)
                 .addProfiles(profiles)
+                //.withProfileImagesVisible(false)
+                //.withProfileImagesClickable(false)
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        Log.i(TAG, "onProfileChanged id: " + profile.getIdentifier());
-                        // TODO set profilo attivo
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putInt(ProfiloDAO.ACTIVE_PROFILE, profile.getIdentifier());
-                        editor.commit();
+                        profiloDAO.activateProfile(new Long(profile.getIdentifier()));
+
                         // HomeFragment
                         openFragment(new HomeFragment(), null);
                         return false;
@@ -81,10 +84,9 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
 
-        // TODO query db per recuperare l'id del profilo attivo
-        Integer idProfiloAttivo = prefs.getInt(ProfiloDAO.ACTIVE_PROFILE, 0);
+        Long idProfiloAttivo = profiloDAO.getIdProfileActive();
         Log.i(TAG, "idProfiloAttivo: " + idProfiloAttivo);
-        headerResult.setActiveProfile(idProfiloAttivo);
+        headerResult.setActiveProfile(idProfiloAttivo.intValue());
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
         PrimaryDrawerItem home = new PrimaryDrawerItem()

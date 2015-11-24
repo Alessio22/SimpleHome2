@@ -3,7 +3,6 @@ package io.alelli.simplehome2;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import io.alelli.simplehome2.adapters.ProfiliAdapter;
 import io.alelli.simplehome2.dao.ProfiloDAO;
@@ -65,19 +66,14 @@ public class SettingsActivity extends AppCompatActivity {
                 builder.setPositiveButton(R.string.dialog_new_profile_save, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.i(TAG, "Dialog Ok");
+                        String etichetta = etichettaEditText.getText().toString();
+                        String url = urlEditText.getText().toString();
+                        String username = usernameEditText.getText().toString();
+                        String password = passwordEditText.getText().toString();
 
-                        Profilo profilo = new Profilo();
-                        profilo.setId(new Long(mAdapter.getCount() + 1));
-                        // TODO prendere l'immagine dal dialog
-                        profilo.setImg(BitmapFactory.decodeResource(context.getResources(), R.raw.profile6));
-                        profilo.setEtichetta(etichettaEditText.getText().toString());
-                        profilo.setUrl(urlEditText.getText().toString());
-                        profilo.setUsername(usernameEditText.getText().toString());
-                        profilo.setPassword(passwordEditText.getText().toString());
-
-                        if(profiloDAO.insert(profilo)) {
-                            mAdapter.add(profilo);
-                        }
+                        Profilo profilo = new Profilo(context, etichetta, url, username, password);
+                        profiloDAO.insert(profilo);
+                        mAdapter.add(profilo);
                     }
                 });
 
@@ -94,8 +90,47 @@ public class SettingsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ArrayList<Profilo> profili = profiloDAO.findAll();
+        List<Profilo> profili = profiloDAO.findAll();
+        Log.i(TAG, "size profile: " + profili.size());
         mAdapter.addAll(profili);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
+                final int pos = position;
+                final Profilo profilo = mAdapter.getItem(position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                // TODO layout di info profilo
+                View layout = inflater.inflate(R.layout.dialog_info_profile, (ViewGroup) findViewById(R.id.content_layout));
+                // TODO textView
+                final TextView etichettaTextView = (TextView) layout.findViewById(R.id.dialog_info_profilo_etichetta);
+                etichettaTextView.setText(profilo.getEtichetta());
+                final TextView urlTextView = (TextView) layout.findViewById(R.id.dialog_info_profilo_url);
+                urlTextView.setText(profilo.getUrl());
+                final TextView usernameTextView = (TextView) layout.findViewById(R.id.dialog_info_profilo_username);
+                usernameTextView.setText(profilo.getUsername());
+
+                builder.setView(layout);
+
+                builder.setTitle(R.string.dialog_info_profile_title);
+                builder.setPositiveButton(R.string.dialog_info_profile_delete, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        profiloDAO.delete(profilo.getId());
+                        mAdapter.remove(pos);
+                    }
+                });
+                builder.setNegativeButton(R.string.dialog_info_profile_close, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
     }
 
 }

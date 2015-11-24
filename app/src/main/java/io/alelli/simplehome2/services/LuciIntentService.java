@@ -4,6 +4,8 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import io.alelli.simplehome2.models.Profilo;
+
 public class LuciIntentService extends IntentService {
     private static final String TAG = "LuciIntentService";
 
@@ -40,11 +42,11 @@ public class LuciIntentService extends IntentService {
         final String nome = intent.getStringExtra(EXTRA_NOME);
         final String stato = intent.getStringExtra(EXTRA_STATO);
 
-        // TODO prenderla dal profilo attivo nel DB
+        Profilo profilo = new Profilo();
         String result = null;
-        API = "http://example.com/";
-        USERNAME = "username";
-        PASSWORD = "password";
+        API = profilo.getUrl();
+        USERNAME = profilo.getUsername();
+        PASSWORD = profilo.getPassword();
 
         switch (action) {
             case ACTION_LIST:
@@ -72,19 +74,19 @@ public class LuciIntentService extends IntentService {
     private String luciDesc() {
         Log.i(TAG, "luciDesc");
         String xml = "";
-
+        // TODO call liciDesc
         return xml;
     }
     private String stato() {
         Log.i(TAG, "stato");
         String xml = "";
-
+        // TODO call stato
         return xml;
     }
     private String changeStatoLuci(Integer id) {
         Log.i(TAG, "changeStatoLuci id: " + id);
         String xml = "";
-
+        // TODO call changeStatoLuci
         return xml;
     }
 

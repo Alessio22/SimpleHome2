@@ -5,10 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.alelli.simplehome2.R;
 import io.alelli.simplehome2.models.Profilo;
@@ -47,8 +47,6 @@ public class ProfiliAdapter extends BaseAdapter {
         Profilo profilo = getItem(position);
         convertView = LayoutInflater.from(context).inflate(R.layout.profilo_list_item, parent, false);
 
-        ImageView img = (ImageView) convertView.findViewById(R.id.profilo_img);
-        img.setImageBitmap(profilo.getImg());
         TextView etichetta = (TextView) convertView.findViewById(R.id.profilo_etichetta);
         etichetta.setText(profilo.getEtichetta());
         TextView url = (TextView) convertView.findViewById(R.id.profilo_url);
@@ -62,7 +60,7 @@ public class ProfiliAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void addAll(ArrayList<Profilo> profili) {
+    public void addAll(List<Profilo> profili) {
         elencoProfili.addAll(profili);
         notifyDataSetChanged();
     }

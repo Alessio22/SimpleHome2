@@ -24,4 +24,9 @@
     <string name="dialog_profilo_txt_username">Username:</string>
     <string name="dialog_profilo_txt_password">Password:</string>
 
+    <string name="dialog_info_profile_title">Profilo</string>
+    <string name="dialog_info_profile_delete">Delete</string>
+    <string name="dialog_info_profile_close">Chiudi</string>
+    <string name="logo_description">logo</string>
+
 </resources>
