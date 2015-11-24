@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -15,9 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -39,11 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private static Context context;
     private Drawer drawer;
     private Toolbar toolbar;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +47,22 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ArrayList<Profilo> profili = new ProfiloDAO(context).findAll();
+        if(profili.size() == 0) {
+            // TODO start WelcomeActivity
+        }
+        // TODO query db per recuperare l'id del profilo attivo
+        Long idProfiloAttivo = 1l;
         IProfile[] profiles = new IProfile[profili.size()];
         for (int i = 0; i < profili.size(); i++) {
-            profiles[i] = new ProfileDrawerItem()
+            ProfileDrawerItem profile = new ProfileDrawerItem()
                     .withName(profili.get(i).getEtichetta())
                     .withEmail(profili.get(i).getUrl())
                     .withIcon(getResources().getDrawable(R.drawable.profile6));
+
+            if(profili.get(i).getId() == idProfiloAttivo) {
+                profile.withSetSelected(true);
+            }
+            profiles[i] = profile;
         }
 
         AccountHeader headerResult = new AccountHeaderBuilder()
@@ -146,9 +147,6 @@ public class MainActivity extends AppCompatActivity {
 
         // HomeFragment
         openFragment(new HomeFragment(), null);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -187,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
-            //ft.addToBackStack(title);
             ft.commit();
         }
 
@@ -198,35 +195,4 @@ public class MainActivity extends AppCompatActivity {
         drawer.closeDrawer();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW,
-                "Main Page",
-                Uri.parse("http://host/path"),
-                Uri.parse("android-app://io.alelli.simplehome2/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW,
-                "Main Page",
-                Uri.parse("http://host/path"),
-                Uri.parse("android-app://io.alelli.simplehome2/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
-    }
 }
