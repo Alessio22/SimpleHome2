@@ -54,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
         List<Profilo> profili = profiloDAO.findAll();
         if(profili.size() == 0) {
             // TODO start WelcomeActivity
+            final Intent intent = new Intent(context, WelcomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
         }
         IProfile[] profiles = new IProfile[profili.size()];
         for (int i = 0; i < profili.size(); i++) {
@@ -149,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 })
-                .build();
+                .buildForFragment();
 
         // HomeFragment
         openFragment(new HomeFragment(), null);
@@ -202,7 +207,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (count == 0) {
             super.onBackPressed();
         } else {
-            getFragmentManager().popBackStack();
+            //getFragmentManager().popBackStack();
+            super.onBackPressed();
         }
     }
 }
