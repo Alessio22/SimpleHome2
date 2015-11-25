@@ -25,11 +25,9 @@ public class LuciIntentService extends IntentService {
     private static final String TAG = "LuciIntentService";
 
     public static final String ACTION_LIST = "io.alelli.simplehome2.services.LuciIntentService.action.LIST";
-    public static final String ACTION_STATO = "io.alelli.simplehome2.services.LuciIntentService.action.STATO";
     public static final String ACTION_CHANGE = "io.alelli.simplehome2.services.LuciIntentService.action.CHANGE";
 
     public static final String BROADCAST_LIST = "io.alelli.simplehome2.services.LuciIntentService.broadcast.LIST";
-    public static final String BROADCAST_STATO = "io.alelli.simplehome2.services.LuciIntentService.broadcast.STATO";
     public static final String BROADCAST_CHANGE = "io.alelli.simplehome2.services.LuciIntentService.broadcast.CHANGE";
 
     public static final String EXTRA_ID_PROFILO = "io.alelli.simplehome2.services.LuciIntentService.extra.ID_PROFILO";
@@ -37,6 +35,7 @@ public class LuciIntentService extends IntentService {
     public static final String EXTRA_NOME = "io.alelli.simplehome2.services.LuciIntentService.extra.NOME";
     public static final String EXTRA_LIST = "io.alelli.simplehome2.services.LuciIntentService.extra.LIST";
     public static final String EXTRA_STATO = "io.alelli.simplehome2.services.LuciIntentService.extra.STATO";
+    public static final String EXTRA_CHANGE_RESULT = "io.alelli.simplehome2.services.LuciIntentService.extra.change.RESULT";
 
     private static Long idProfiloAttivo;
     private static String API = "";
@@ -63,27 +62,21 @@ public class LuciIntentService extends IntentService {
         ProfiloDAO dao = new ProfiloDAO(getBaseContext());
         Profilo profilo = dao.findById(idProfiloAttivo);
 
-        String result = null;
         API = profilo.getUrl();
         USERNAME = profilo.getUsername();
         PASSWORD = profilo.getPassword();
 
         switch (action) {
             case ACTION_LIST:
-                result = luciDesc();
+                String jsonList = luciDesc();
                 final Intent intentBroadcastList = new Intent(BROADCAST_LIST);
-                intentBroadcastList.putExtra(EXTRA_LIST, result);
+                intentBroadcastList.putExtra(EXTRA_LIST, jsonList);
                 sendBroadcast(intentBroadcastList);
                 break;
-            case ACTION_STATO:
-                result = stato();
-                final Intent intentBroadcastStato = new Intent(BROADCAST_STATO);
-                intentBroadcastStato.putExtra(EXTRA_LIST, result);
-                sendBroadcast(intentBroadcastStato);
-                break;
             case ACTION_CHANGE:
-                changeStatoLuci(id);
+                boolean result = changeStatoLuci(id);
                 final Intent intentBroadcastChange = new Intent(BROADCAST_CHANGE);
+                intentBroadcastChange.putExtra(EXTRA_CHANGE_RESULT, result);
                 intentBroadcastChange.putExtra(EXTRA_NOME, nome);
                 intentBroadcastChange.putExtra(EXTRA_STATO, stato);
                 sendBroadcast(intentBroadcastChange);
@@ -93,21 +86,21 @@ public class LuciIntentService extends IntentService {
 
     private String luciDesc() {
         Log.i(TAG, "luciDesc");
-        String json = invokeApi(API + "user/luci_desc.xml");
-        Log.i(TAG, json);
+        String json = "";
+        HttpURLConnection httpURLConnection = null;
+        try {
+            URL url = new URL(API + "user/luci_desc.xml");
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            String userCredentials = USERNAME+":"+PASSWORD;
+            String basicAuth = "Basic " + Base64.encodeToString(userCredentials.getBytes("UTF-8"), Base64.DEFAULT);
+            httpURLConnection.setRequestProperty("Authorization", basicAuth);
+            json = parse(httpURLConnection.getInputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (httpURLConnection != null) httpURLConnection.disconnect();
+        }
         return json;
-    }
-    private String stato() {
-        Log.i(TAG, "stato");
-        String xml = "";
-        // TODO call stato
-        return xml;
-    }
-    private String changeStatoLuci(Integer id) {
-        Log.i(TAG, "changeStatoLuci id: " + id);
-        String xml = "";
-        // TODO call changeStatoLuci
-        return xml;
     }
 
     private static final String ns = null;
@@ -127,6 +120,7 @@ public class LuciIntentService extends IntentService {
 
     private ArrayList<Luci> readDescLuci(XmlPullParser parser) throws XmlPullParserException, IOException {
         ArrayList<Luci> luci = new ArrayList();
+        char[] charArray = null;
 
         parser.require(XmlPullParser.START_TAG, ns, "response");
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -134,7 +128,12 @@ public class LuciIntentService extends IntentService {
                 continue;
             }
             String name = parser.getName();
-            if (name.startsWith("desc")) {
+            if (name.startsWith("stato")) {
+                if (parser.next() == XmlPullParser.TEXT) {
+                    charArray = parser.getText().toCharArray();
+                    parser.nextTag();
+                }
+            } else if (name.startsWith("desc")) {
                 Integer id = Integer.parseInt( name.substring(4) );
                 String desc = null;
                 if (parser.next() == XmlPullParser.TEXT) {
@@ -143,7 +142,11 @@ public class LuciIntentService extends IntentService {
                 }
                 if(desc != null) {
                     Log.i(TAG, id + ": " + desc);
-                    luci.add(new Luci(id, desc, false));
+                    boolean accesa = false;
+                    if(charArray != null) {
+                        accesa = charArray[id] != '0' ? true : false;
+                    }
+                    luci.add(new Luci(id, desc, accesa));
                 }
             } else {
                 skip(parser);
@@ -169,22 +172,24 @@ public class LuciIntentService extends IntentService {
         }
     }
 
-    private String invokeApi(String urlStr) {
-        String xml = "";
+    private boolean changeStatoLuci(Integer id) {
+        Log.i(TAG, "changeStatoLuci id: " + id);
+        boolean result = false;
         HttpURLConnection httpURLConnection = null;
         try {
-            URL url = new URL(urlStr);
+            URL url = new URL(API + "user/luci.cgi?luce="+id);
             httpURLConnection = (HttpURLConnection) url.openConnection();
             String userCredentials = USERNAME+":"+PASSWORD;
             String basicAuth = "Basic " + Base64.encodeToString(userCredentials.getBytes("UTF-8"), Base64.DEFAULT);
-            httpURLConnection.setRequestProperty ("Authorization", basicAuth);
-            xml = parse(httpURLConnection.getInputStream());
+            httpURLConnection.setRequestProperty("Authorization", basicAuth);
+            if(httpURLConnection.getResponseCode() == 200) {
+                result = true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (httpURLConnection != null) httpURLConnection.disconnect();
         }
-        return xml;
+        return result;
     }
-
 }

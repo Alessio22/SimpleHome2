@@ -46,16 +46,7 @@ public class LuciFragment extends Fragment {
                 String json = intent.getStringExtra(LuciIntentService.EXTRA_LIST);
                 Type listType = new TypeToken<ArrayList<Luci>>() {}.getType();
                 ArrayList<Luci> listaLuci = new Gson().fromJson(json, listType);
-                for (Luci luce: listaLuci) {
-                    mAdapter.add(luce);
-                }
-                luciService.setAction(LuciIntentService.ACTION_STATO);
-                context.startService(luciService);
-            }
-
-            if(LuciIntentService.BROADCAST_STATO.equals(intent.getAction())) {
-                String xml = intent.getStringExtra(LuciIntentService.EXTRA_LIST);
-                Log.i(TAG, xml);
+                mAdapter.addAll(listaLuci);
 
                 String message = "Aggiornamento completato";
                 if(getView() != null) {
@@ -65,10 +56,14 @@ public class LuciFragment extends Fragment {
             }
 
             if(LuciIntentService.BROADCAST_CHANGE.equals(intent.getAction())) {
+                boolean result = intent.getBooleanExtra(LuciIntentService.EXTRA_CHANGE_RESULT, false);
                 String stato = intent.getStringExtra(LuciIntentService.EXTRA_STATO);
                 String nome = intent.getStringExtra(LuciIntentService.EXTRA_NOME);
 
-                String message = "Luce " + nome + " " + stato;
+                String message = "Si è verificato un errore";
+                if(result) {
+                    message = "Luce " + nome + " " + stato;
+                }
                 if(getView() != null) {
                     Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
                 }
@@ -96,7 +91,6 @@ public class LuciFragment extends Fragment {
 
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LuciIntentService.BROADCAST_LIST);
-        intentFilter.addAction(LuciIntentService.BROADCAST_STATO);
         intentFilter.addAction(LuciIntentService.BROADCAST_CHANGE);
         context.registerReceiver(receiver, intentFilter);
     }
@@ -114,12 +108,9 @@ public class LuciFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                luciService.setAction(LuciIntentService.ACTION_STATO);
+                luciService.setAction(LuciIntentService.ACTION_LIST);
+                luciService.putExtra(LuciIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
                 context.startService(luciService);
-
-                final IntentFilter intentFilter = new IntentFilter();
-                intentFilter.addAction(LuciIntentService.BROADCAST_STATO);
-                context.registerReceiver(receiver, intentFilter);
             }
         });
         swipeContainer.setColorSchemeResources(R.color.primary);
