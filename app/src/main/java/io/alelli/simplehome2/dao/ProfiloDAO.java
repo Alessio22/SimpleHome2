@@ -2,7 +2,6 @@ package io.alelli.simplehome2.dao;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.List;
 
@@ -36,7 +35,6 @@ public class ProfiloDAO {
 
     public void insert(Profilo profilo) {
         profilo.save();
-        Log.i(TAG, "Profilo.count( " + Profilo.count(Profilo.class, null, null));
     }
 
     public void delete(Long id) {

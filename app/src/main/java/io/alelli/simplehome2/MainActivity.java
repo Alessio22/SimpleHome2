@@ -156,15 +156,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen()) {
-            drawer.closeDrawer();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -190,7 +181,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.replace(R.id.content_frame, fragment);
+            ft.addToBackStack(null);
             ft.commit();
         }
 
@@ -201,4 +194,15 @@ public class MainActivity extends AppCompatActivity {
         drawer.closeDrawer();
     }
 
+    @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+        if (drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else if (count == 0) {
+            super.onBackPressed();
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
 }
