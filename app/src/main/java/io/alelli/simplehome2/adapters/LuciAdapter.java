@@ -2,6 +2,7 @@ package io.alelli.simplehome2.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,9 @@ import android.widget.Switch;
 
 import java.util.ArrayList;
 
+import io.alelli.simplehome2.MainActivity;
 import io.alelli.simplehome2.R;
+import io.alelli.simplehome2.dao.ProfiloDAO;
 import io.alelli.simplehome2.models.Luci;
 import io.alelli.simplehome2.services.LuciIntentService;
 
@@ -50,6 +53,10 @@ public class LuciAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Luci luce = elencoLuci.get(position);
         convertView = LayoutInflater.from(context).inflate(R.layout.luci_list_item, parent, false);
+
+        final SharedPreferences prefs = ((MainActivity) context).getPreferences(Context.MODE_PRIVATE);
+        ProfiloDAO profiloDAO = new ProfiloDAO(prefs);
+        final Long idProfiloAttivo = profiloDAO.getIdProfileActive();
         luciService = new Intent(context, LuciIntentService.class);
 
         Switch switchStato = (Switch) convertView.findViewById(R.id.luciSwitch);
@@ -66,6 +73,7 @@ public class LuciAdapter extends BaseAdapter {
             Log.i(TAG, "idLuce: " + (isChecked ? "ON" : "OFF"));
 
             luciService.setAction(LuciIntentService.ACTION_CHANGE);
+            luciService.putExtra(LuciIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
             luciService.putExtra(LuciIntentService.EXTRA_ID, idLuce);
             luciService.putExtra(LuciIntentService.EXTRA_NOME, nomeLuce);
             luciService.putExtra(LuciIntentService.EXTRA_STATO, isChecked ? "Accesa" : "Spenta");
@@ -78,6 +86,12 @@ public class LuciAdapter extends BaseAdapter {
 
     public void add(Luci luce) {
         elencoLuci.add(luce);
+        notifyDataSetChanged();
+    }
+
+    public void addAll(ArrayList<Luci> luci) {
+        elencoLuci.clear();
+        elencoLuci.addAll(luci);
         notifyDataSetChanged();
     }
 

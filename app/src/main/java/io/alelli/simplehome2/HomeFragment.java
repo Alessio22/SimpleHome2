@@ -64,7 +64,9 @@ public class HomeFragment extends Fragment {
     private void openFragment(String title, Fragment fragment) {
         if (fragment != null) {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.replace(R.id.content_frame, fragment);
+            ft.addToBackStack(null);
             ft.commit();
         }
 /*
