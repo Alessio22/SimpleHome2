@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 })
-                .buildForFragment();
+                .build();
 
         // HomeFragment
         openFragment(new HomeFragment(), null);

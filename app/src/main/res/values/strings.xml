@@ -29,8 +29,4 @@
     <string name="dialog_info_profile_close">Chiudi</string>
     <string name="logo_description">logo</string>
 
-    <string name="title_activity_welcome">WelcomeActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-
 </resources>

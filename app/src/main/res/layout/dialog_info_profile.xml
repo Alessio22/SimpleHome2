@@ -5,39 +5,43 @@
     android:padding="20dp">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/dialog_profilo_txt_etichetta"
         android:id="@+id/dialog_profilo_txt_etichetta" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/dialog_info_profilo_etichetta" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/dialog_profilo_txt_url"
         android:id="@+id/dialog_profilo_txt_url" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dialog_info_profilo_url"
-        android:layout_gravity="center_horizontal" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/dialog_info_profilo_url" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/dialog_profilo_txt_username"
         android:id="@+id/dialog_profilo_txt_username" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dialog_info_profilo_username"
-        android:layout_gravity="center_horizontal" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/dialog_info_profilo_username" />
 
 
 </LinearLayout>

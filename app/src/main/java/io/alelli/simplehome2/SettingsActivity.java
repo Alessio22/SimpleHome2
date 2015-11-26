@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,6 +17,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import io.alelli.simplehome2.adapters.ProfiliAdapter;
@@ -50,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                 View layout = inflater.inflate(R.layout.dialog_new_profile, (ViewGroup) findViewById(R.id.content_layout));
@@ -66,14 +69,37 @@ public class SettingsActivity extends AppCompatActivity {
                 builder.setPositiveButton(R.string.dialog_new_profile_save, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Log.i(TAG, "Dialog Ok");
+                        Boolean hasError = false;
                         String etichetta = etichettaEditText.getText().toString();
+                        if (etichetta == null || "".equals(etichetta)) {
+                            etichettaEditText.setError("Etichetta obbligatoria");
+                            hasError = true;
+                        }
                         String url = urlEditText.getText().toString();
+                        try {
+                            new URL(url);
+                        } catch (MalformedURLException malformedURLException) {
+                            urlEditText.setError("URL non valido");
+                            hasError = true;
+                        }
                         String username = usernameEditText.getText().toString();
                         String password = passwordEditText.getText().toString();
+                        if (password == null || "".equals(password)) {
+                            passwordEditText.setError("Password obbligatoria");
+                            hasError = true;
+                        }
 
-                        Profilo profilo = new Profilo(context, etichetta, url, username, password);
-                        profiloDAO.insert(profilo);
-                        mAdapter.add(profilo);
+                        String message;
+                        if (!hasError) {
+                            Profilo profilo = new Profilo(context, etichetta, url, username, password);
+                            profiloDAO.insert(profilo);
+                            mAdapter.add(profilo);
+                            message = "Profilo aggiunto";
+                        } else {
+                            message = "Profilo non aggiunto";
+                        }
+
+                        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
                     }
                 });
 

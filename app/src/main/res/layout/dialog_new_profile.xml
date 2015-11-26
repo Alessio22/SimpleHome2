@@ -8,42 +8,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/dialog_profilo_txt_etichetta"
-        android:id="@+id/dialog_profilo_txt_etichetta" />
+        android:id="@+id/dialog_profilo_txt_etichetta"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/dialog_profilo_etichetta" />
+        android:id="@+id/dialog_profilo_etichetta"
+        android:inputType="text" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/dialog_profilo_txt_url"
-        android:id="@+id/dialog_profilo_txt_url" />
+        android:id="@+id/dialog_profilo_txt_url"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/dialog_profilo_url"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:inputType="text" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/dialog_profilo_txt_username"
-        android:id="@+id/dialog_profilo_txt_username" />
+        android:id="@+id/dialog_profilo_txt_username"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/dialog_profilo_username"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:inputType="text" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/dialog_profilo_txt_password"
-        android:id="@+id/dialog_profilo_txt_password" />
+        android:id="@+id/dialog_profilo_txt_password"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="match_parent"
