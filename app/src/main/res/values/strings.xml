@@ -1,20 +1,32 @@
 <resources>
     <string name="app_name">SimpleHome 2</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
-
+    <string name="home_nav">Home</string>
+    <string name="home_title_frangment">Home</string>
     <string name="luci_nav">Luci</string>
     <string name="luci_title_fragment">Luci</string>
     <string name="temperature_nav">Temperature</string>
     <string name="temperature_title_fragment">Temperature</string>
     <string name="allarme_nav">Allarme</string>
     <string name="allarme_title_fragment">Allarme</string>
+    <string name="settings_nav">Impostazioni</string>
+    <string name="title_activity_settings">Impostazioni</string>
+    <string name="about_nav">Informazioni</string>
+    <string name="about_dialog_title">Informazioni</string>
+    <string name="about_dialog_close">Chiudi</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="dialog_new_profile_title">Nuovo Profilo</string>
+    <string name="dialog_new_profile_save">Salva</string>
+    <string name="dialog_new_profile_close">Chiudi</string>
+    <string name="dialog_profilo_txt_etichetta">Etichetta:</string>
+    <string name="dialog_profilo_txt_url">URL:</string>
+    <string name="dialog_profilo_txt_username">Username:</string>
+    <string name="dialog_profilo_txt_password">Password:</string>
+
+    <string name="dialog_info_profile_title">Profilo</string>
+    <string name="dialog_info_profile_delete">Delete</string>
+    <string name="dialog_info_profile_close">Chiudi</string>
+    <string name="logo_description">logo</string>
 
 </resources>

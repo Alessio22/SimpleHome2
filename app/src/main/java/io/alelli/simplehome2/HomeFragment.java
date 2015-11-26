@@ -1,13 +1,10 @@
 package io.alelli.simplehome2;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,9 +17,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
     }
 
     @Override
@@ -50,13 +44,12 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button btnAllarme = (Button) view.findViewById(R.id.button_allarme);
-        btnAllarme.setOnClickListener(new View.OnClickListener() {
+        Button btnSettings = (Button) view.findViewById(R.id.button_settings);
+        btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Fragment fragment = new AllarmeFragment();
-                //String title = getString(R.string.allarme_title_fragment);
-                //openFragment(title, fragment);
+                final Intent intent = new Intent(getContext(), SettingsActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -71,7 +64,9 @@ public class HomeFragment extends Fragment {
     private void openFragment(String title, Fragment fragment) {
         if (fragment != null) {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.replace(R.id.content_frame, fragment);
+            ft.addToBackStack(null);
             ft.commit();
         }
 /*

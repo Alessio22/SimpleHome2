@@ -1,108 +1,214 @@
 package io.alelli.simplehome2;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+
+import java.util.List;
+
+import io.alelli.simplehome2.dao.ProfiloDAO;
+import io.alelli.simplehome2.models.Profilo;
+
+public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+    private static Context context;
+    private Drawer drawer;
+    private Toolbar toolbar;
+
+    private ProfiloDAO profiloDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        context = this;
+
+        final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        profiloDAO = new ProfiloDAO(prefs);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        List<Profilo> profili = profiloDAO.findAll();
+        if(profili.size() == 0) {
+            // TODO start WelcomeActivity
+            final Intent intent = new Intent(context, WelcomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+        }
+        IProfile[] profiles = new IProfile[profili.size()];
+        for (int i = 0; i < profili.size(); i++) {
+            ProfileDrawerItem profile = new ProfileDrawerItem()
+                    .withIdentifier(profili.get(i).getId().intValue())
+                    .withName(profili.get(i).getEtichetta())
+                    .withEmail(profili.get(i).getUrl())
+                    .withNameShown(true)
+                    .withIcon(getResources().getDrawable(R.drawable.logo));
+            profiles[i] = profile;
+        }
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.drawable.side_nav_bar)
+                .addProfiles(profiles)
+                //.withProfileImagesVisible(false)
+                //.withProfileImagesClickable(false)
+                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                    @Override
+                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                        profiloDAO.activateProfile(new Long(profile.getIdentifier()));
+
+                        // HomeFragment
+                        openFragment(new HomeFragment(), null);
+                        return false;
+                    }
+                })
+                .build();
+
+        Long idProfiloAttivo = profiloDAO.getIdProfileActive();
+        Log.i(TAG, "idProfiloAttivo: " + idProfiloAttivo);
+        headerResult.setActiveProfile(idProfiloAttivo.intValue());
+
+        //if you want to update the items at a later time it is recommended to keep it in a variable
+        PrimaryDrawerItem home = new PrimaryDrawerItem()
+                .withName(R.string.home_nav)
+                .withIcon(R.drawable.ic_home_24dp);
+        PrimaryDrawerItem luci = new PrimaryDrawerItem()
+                .withName(R.string.luci_nav)
+                .withIcon(R.drawable.ic_wb_incandescent_24dp);
+        PrimaryDrawerItem temperature = new PrimaryDrawerItem()
+                .withName(R.string.temperature_nav)
+                .withIcon(R.drawable.ic_ac_unit_black_24px);
+        PrimaryDrawerItem allarme = new PrimaryDrawerItem().withSelectable(false)
+                .withName(R.string.allarme_nav)
+                .withIcon(R.drawable.ic_security_black_24px);
+        SecondaryDrawerItem settings = new SecondaryDrawerItem()
+                .withName(R.string.settings_nav).withTextColorRes(R.color.secondary_text)
+                .withIcon(R.drawable.ic_settings_24dp);
+        SecondaryDrawerItem about = new SecondaryDrawerItem()
+                .withName(R.string.about_nav).withTextColorRes(R.color.secondary_text)
+                .withIcon(R.drawable.ic_info_24dp);
+
+        drawer = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withAccountHeader(headerResult)
+                .addDrawerItems(home, luci, temperature, allarme, new DividerDrawerItem(), settings, about)
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        switch (position) {
+                            case 1:
+                                openFragment(new HomeFragment(), null);
+                                break;
+                            case 2:
+                                openFragment(new LuciFragment(), getString(R.string.luci_title_fragment));
+                                break;
+                            case 3:
+                                openFragment(new TemperatureFragment(), getString(R.string.temperature_title_fragment));
+                                break;
+                            case 4:
+                                //openFragment(new AllarmeFragment(), getString(R.string.allarme_title_fragment));
+                                break;
+                            case 6:
+                                final Intent intent = new Intent(context, SettingsActivity.class);
+                                startActivity(intent);
+                                break;
+                            case 7:
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setTitle(R.string.about_dialog_title);
+                                builder.setPositiveButton(R.string.about_dialog_close, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        Log.i(TAG, "Dialog Ok");
+                                    }
+                                });
+
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                                break;
+                        }
+                        return true;
+                    }
+                })
+                .build();
 
         // HomeFragment
-        Fragment fragment = new HomeFragment();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, fragment);
-        ft.commit();
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        openFragment(new HomeFragment(), null);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            final Intent intent = new Intent(context, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        Fragment fragment = null;
-        String title = getString(R.string.app_name);
-
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_luci) {
-            fragment = new LuciFragment();
-            title = getString(R.string.luci_title_fragment);
-        } else if (id == R.id.nav_temperatura) {
-            fragment = new TemperatureFragment();
-            title  = getString(R.string.temperature_title_fragment);
-        } else if (id == R.id.nav_allarme) {
-            //fragment = new AllarmeFragment();
-            //title  = getString(R.string.allarme_title_fragment);
+    private void openFragment(Fragment fragment, String title) {
+        if (title == null || "".equals(title)) {
+            title = getString(R.string.app_name);
         }
 
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.replace(R.id.content_frame, fragment);
+            ft.addToBackStack(null);
             ft.commit();
         }
 
-        // set the toolbar title
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        drawer.closeDrawer();
+    }
+
+    @Override
+    public void onBackPressed() {
+        int count = getFragmentManager().getBackStackEntryCount();
+        if (drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else if (count == 0) {
+            super.onBackPressed();
+        } else {
+            //getFragmentManager().popBackStack();
+            super.onBackPressed();
+        }
     }
 }
