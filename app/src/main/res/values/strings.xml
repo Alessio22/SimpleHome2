@@ -11,9 +11,8 @@
     <string name="allarme_title_fragment">Allarme</string>
     <string name="settings_nav">Impostazioni</string>
     <string name="title_activity_settings">Impostazioni</string>
-    <string name="about_nav">Informazioni</string>
-    <string name="about_dialog_title">Informazioni</string>
-    <string name="about_dialog_close">Chiudi</string>
+    <string name="info_nav">Informazioni</string>
+    <string name="info_title_fragment">Informazioni</string>
 
     <string name="dialog_new_profile_title">Nuovo Profilo</string>
     <string name="dialog_new_profile_save">Salva</string>
@@ -36,5 +35,8 @@
     <string name="errore_generico">Si è verificato un errore</string>
     <string name="errore_host_non_raggiungibile">Host non raggiungibile</string>
     <string name="errore_host_non_valido">Host non valido</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
