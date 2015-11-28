@@ -52,14 +52,17 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         List<Profilo> profili = profiloDAO.findAll();
+        Profilo profiloAttivo = profiloDAO.findById(profiloDAO.getIdProfileActive());
         if(profili.size() == 0) {
-            // TODO start WelcomeActivity
             final Intent intent = new Intent(context, WelcomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+        } else if(profiloAttivo == null) {
+            profiloDAO.activateProfile(new Long(profili.get(0).getId()));
         }
+
         IProfile[] profiles = new IProfile[profili.size()];
         for (int i = 0; i < profili.size(); i++) {
             ProfileDrawerItem profile = new ProfileDrawerItem()
@@ -89,9 +92,10 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
 
+
         Long idProfiloAttivo = profiloDAO.getIdProfileActive();
         Log.i(TAG, "idProfiloAttivo: " + idProfiloAttivo);
-        headerResult.setActiveProfile(idProfiloAttivo.intValue());
+        headerResult.setActiveProfile(idProfiloAttivo.intValue());;
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
         PrimaryDrawerItem home = new PrimaryDrawerItem()
@@ -188,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.replace(R.id.content_frame, fragment);
-            ft.addToBackStack(null);
             ft.commit();
         }
 
@@ -201,13 +204,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        int count = getFragmentManager().getBackStackEntryCount();
         if (drawer.isDrawerOpen()) {
             drawer.closeDrawer();
-        } else if (count == 0) {
-            super.onBackPressed();
         } else {
-            //getFragmentManager().popBackStack();
             super.onBackPressed();
         }
     }

@@ -10,10 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class HomeFragment extends Fragment {
-
-    public HomeFragment() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +25,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Fragment fragment = new LuciFragment();
-                String title = getString(R.string.luci_title_fragment);
-                openFragment(title, fragment);
+                openFragment(fragment);
             }
         });
 
@@ -39,8 +34,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Fragment fragment = new TemperatureFragment();
-                String title = getString(R.string.temperature_title_fragment);
-                openFragment(title, fragment);
+                openFragment(fragment);
             }
         });
 
@@ -61,19 +55,13 @@ public class HomeFragment extends Fragment {
         super.onDetach();
     }
 
-    private void openFragment(String title, Fragment fragment) {
+    private void openFragment(Fragment fragment) {
         if (fragment != null) {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.replace(R.id.content_frame, fragment);
-            ft.addToBackStack(null);
             ft.commit();
         }
-/*
-        // set the toolbar title
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(title);
-        }*/
     }
 
 

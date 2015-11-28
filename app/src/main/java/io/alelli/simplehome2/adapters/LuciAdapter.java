@@ -76,7 +76,7 @@ public class LuciAdapter extends BaseAdapter {
             luciService.putExtra(LuciIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
             luciService.putExtra(LuciIntentService.EXTRA_ID, idLuce);
             luciService.putExtra(LuciIntentService.EXTRA_NOME, nomeLuce);
-            luciService.putExtra(LuciIntentService.EXTRA_STATO, isChecked ? "Accesa" : "Spenta");
+            luciService.putExtra(LuciIntentService.EXTRA_STATO, isChecked ? R.string.luce_accesa : R.string.luce_spenta);
             context.startService(luciService);
             }
         });
