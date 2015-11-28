@@ -1,8 +1,6 @@
 package io.alelli.simplehome2;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 .withName(R.string.settings_nav).withTextColorRes(R.color.secondary_text)
                 .withIcon(R.drawable.ic_settings_24dp);
         SecondaryDrawerItem about = new SecondaryDrawerItem()
-                .withName(R.string.about_nav).withTextColorRes(R.color.secondary_text)
+                .withName(R.string.info_nav).withTextColorRes(R.color.secondary_text)
                 .withIcon(R.drawable.ic_info_24dp);
 
         drawer = new DrawerBuilder()
@@ -143,16 +141,7 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 break;
                             case 7:
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setTitle(R.string.about_dialog_title);
-                                builder.setPositiveButton(R.string.about_dialog_close, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        Log.i(TAG, "Dialog Ok");
-                                    }
-                                });
-
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
+                                openFragment(new InfoFragment(), getString(R.string.info_title_fragment));
                                 break;
                         }
                         return true;
