@@ -64,7 +64,7 @@ public class LuciFragment extends Fragment {
 
             if(LuciIntentService.BROADCAST_CHANGE.equals(intent.getAction())) {
                 String errore = intent.getStringExtra(LuciIntentService.EXTRA_ERROR);
-                if(errore != null) {
+                if(errore == null) {
                     boolean result = intent.getBooleanExtra(LuciIntentService.EXTRA_CHANGE_RESULT, false);
                     String stato = intent.getStringExtra(LuciIntentService.EXTRA_STATO);
                     String nome = intent.getStringExtra(LuciIntentService.EXTRA_NOME);
@@ -95,6 +95,7 @@ public class LuciFragment extends Fragment {
         final SharedPreferences prefs = this.getActivity().getPreferences(Context.MODE_PRIVATE);
         ProfiloDAO profiloDAO = new ProfiloDAO(prefs);
         idProfiloAttivo = profiloDAO.getIdProfileActive();
+        Log.i(TAG, "onCreate: " + idProfiloAttivo);
 
         mAdapter = new LuciAdapter(context);
 
@@ -128,6 +129,7 @@ public class LuciFragment extends Fragment {
             }
         });
         swipeContainer.setColorSchemeResources(R.color.primary);
+        swipeContainer.setRefreshing(true);
 
         return view;
     }
