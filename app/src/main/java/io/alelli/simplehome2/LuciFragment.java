@@ -95,6 +95,7 @@ public class LuciFragment extends Fragment {
         final SharedPreferences prefs = this.getActivity().getPreferences(Context.MODE_PRIVATE);
         ProfiloDAO profiloDAO = new ProfiloDAO(prefs);
         idProfiloAttivo = profiloDAO.getIdProfileActive();
+        Log.i(TAG, "onCreate: " + idProfiloAttivo);
 
         mAdapter = new LuciAdapter(context);
 
