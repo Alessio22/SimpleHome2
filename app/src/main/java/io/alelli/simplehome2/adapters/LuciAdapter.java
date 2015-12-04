@@ -67,18 +67,18 @@ public class LuciAdapter extends BaseAdapter {
         switchStato.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            Switch switchStato = (Switch) buttonView;
-            Integer idLuce = (Integer) switchStato.getTag();
-            String nomeLuce = (String) switchStato.getText();
-            Log.i(TAG, "idLuce: " + (isChecked ? "ON" : "OFF"));
+                Switch switchStato = (Switch) buttonView;
+                Integer idLuce = (Integer) switchStato.getTag();
+                String nomeLuce = (String) switchStato.getText();
+                Log.i(TAG, "idLuce: " + (isChecked ? "ON" : "OFF"));
 
-            luciService.setAction(LuciIntentService.ACTION_CHANGE);
-            luciService.putExtra(LuciIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
-            luciService.putExtra(LuciIntentService.EXTRA_ID, idLuce);
-            luciService.putExtra(LuciIntentService.EXTRA_NOME, nomeLuce);
+                luciService.setAction(LuciIntentService.ACTION_CHANGE);
+                luciService.putExtra(LuciIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
+                luciService.putExtra(LuciIntentService.EXTRA_ID, idLuce);
+                luciService.putExtra(LuciIntentService.EXTRA_NOME, nomeLuce);
 
-            luciService.putExtra(LuciIntentService.EXTRA_STATO, isChecked ? context.getString(R.string.luce_accesa) : context.getString(R.string.luce_spenta));
-            context.startService(luciService);
+                luciService.putExtra(LuciIntentService.EXTRA_STATO, isChecked ? context.getString(R.string.luce_accesa) : context.getString(R.string.luce_spenta));
+                context.startService(luciService);
             }
         });
 

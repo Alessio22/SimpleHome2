@@ -70,6 +70,7 @@ public class TemperatureIntentService extends IntentService {
         USERNAME = profilo.getUsername();
         PASSWORD = profilo.getPassword();
 
+        boolean result = false;
         switch (action) {
             case ACTION_LIST:
                 final Intent intentBroadcastList = new Intent(BROADCAST_LIST);
@@ -91,12 +92,63 @@ public class TemperatureIntentService extends IntentService {
                 sendBroadcast(intentBroadcastList);
                 break;
             case ACTION_UP:
-                // TODO chiamata aumenta temperatura
+                final Intent intentBroadcastUp = new Intent(BROADCAST_UP);
+                try {
+                    result = changeTemperatura(1, id);
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "onHandleIntent: MalformedURLException: " + getString(R.string.errore_host_non_valido));
+                    intentBroadcastUp.putExtra(EXTRA_ERROR, getString(R.string.errore_host_non_valido));
+                } catch (UnknownHostException e) {
+                    Log.e(TAG, "onHandleIntent: UnknownHostException: " + getString(R.string.errore_host_non_raggiungibile));
+                    intentBroadcastUp.putExtra(EXTRA_ERROR, getString(R.string.errore_host_non_raggiungibile));
+                } catch (Exception e){
+                    Log.e(TAG, "onHandleIntent: Exception: " + getString(R.string.errore_generico));
+                    intentBroadcastUp.putExtra(EXTRA_ERROR, getString(R.string.errore_generico));
+                }
+                intentBroadcastUp.putExtra(EXTRA_CHANGE_RESULT, result);
+                intentBroadcastUp.putExtra(EXTRA_NOME, nome);
+                sendBroadcast(intentBroadcastUp);
                 break;
             case ACTION_DOWN:
-                // TODO chiamata diminuisci temperatura
+                final Intent intentBroadcastDown = new Intent(BROADCAST_DOWN);
+                try {
+                    result = changeTemperatura(0, id);
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "onHandleIntent: MalformedURLException: " + getString(R.string.errore_host_non_valido));
+                    intentBroadcastDown.putExtra(EXTRA_ERROR, getString(R.string.errore_host_non_valido));
+                } catch (UnknownHostException e) {
+                    Log.e(TAG, "onHandleIntent: UnknownHostException: " + getString(R.string.errore_host_non_raggiungibile));
+                    intentBroadcastDown.putExtra(EXTRA_ERROR, getString(R.string.errore_host_non_raggiungibile));
+                } catch (Exception e){
+                    Log.e(TAG, "onHandleIntent: Exception: " + getString(R.string.errore_generico));
+                    intentBroadcastDown.putExtra(EXTRA_ERROR, getString(R.string.errore_generico));
+                }
+                intentBroadcastDown.putExtra(EXTRA_CHANGE_RESULT, result);
+                intentBroadcastDown.putExtra(EXTRA_NOME, nome);
+                sendBroadcast(intentBroadcastDown);
                 break;
         }
+    }
+
+    private boolean changeTemperatura(Integer command, Integer id) throws Exception {
+        Log.i(TAG, "changeTemperatura id: " + id + " command: " + 1);
+        boolean result = false;
+        HttpURLConnection httpURLConnection = null;
+        try {
+            URL url = new URL(API + "user/termo.cgi?command="+command+"&num_termo="+id);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            String userCredentials = USERNAME+":"+PASSWORD;
+            String basicAuth = "Basic " + Base64.encodeToString(userCredentials.getBytes("UTF-8"), Base64.DEFAULT);
+            httpURLConnection.setRequestProperty("Authorization", basicAuth);
+            if(httpURLConnection.getResponseCode() == 200) {
+                result = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (httpURLConnection != null) httpURLConnection.disconnect();
+        }
+        return result;
     }
 
     private String tempDesc() throws XmlPullParserException, IOException {

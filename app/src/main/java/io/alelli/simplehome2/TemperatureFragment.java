@@ -63,11 +63,53 @@ public class TemperatureFragment extends Fragment {
             }
 
             if(TemperatureIntentService.BROADCAST_UP.equals(intent.getAction())) {
-                // TODO broadcast aumenta temp
+                String errore = intent.getStringExtra(TemperatureIntentService.EXTRA_ERROR);
+                if(errore == null) {
+                    boolean result = intent.getBooleanExtra(TemperatureIntentService.EXTRA_CHANGE_RESULT, false);
+                    String nome = intent.getStringExtra(TemperatureIntentService.EXTRA_NOME);
+
+                    String message = getString(R.string.errore_change_temperatura);
+                    if (result) {
+                        message = "Temperatura " + nome + " alzata";
+                    }
+                    if(getView() != null) {
+                        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                    }
+                    swipeContainer.setRefreshing(true);
+                    temperatureService = new Intent(context, TemperatureIntentService.class);
+                    temperatureService.setAction(TemperatureIntentService.ACTION_LIST);
+                    temperatureService.putExtra(TemperatureIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
+                    context.startService(temperatureService);
+                } else {
+                    if(getView() != null) {
+                        Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
+                    }
+                }
             }
 
             if(TemperatureIntentService.BROADCAST_DOWN.equals(intent.getAction())) {
-                // TODO broadcast diminuisci temp
+                String errore = intent.getStringExtra(TemperatureIntentService.EXTRA_ERROR);
+                if(errore == null) {
+                    boolean result = intent.getBooleanExtra(TemperatureIntentService.EXTRA_CHANGE_RESULT, false);
+                    String nome = intent.getStringExtra(TemperatureIntentService.EXTRA_NOME);
+
+                    String message = getString(R.string.errore_change_temperatura);
+                    if (result) {
+                        message = "Temperatura " + nome + " abbassata";
+                    }
+                    if(getView() != null) {
+                        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                    }
+                    swipeContainer.setRefreshing(true);
+                    temperatureService = new Intent(context, TemperatureIntentService.class);
+                    temperatureService.setAction(TemperatureIntentService.ACTION_LIST);
+                    temperatureService.putExtra(TemperatureIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
+                    context.startService(temperatureService);
+                } else {
+                    if(getView() != null) {
+                        Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
+                    }
+                }
             }
 
         }
@@ -116,6 +158,7 @@ public class TemperatureFragment extends Fragment {
             }
         });
         swipeContainer.setColorSchemeResources(R.color.primary);
+        swipeContainer.setRefreshing(true);
 
         return view;
     }

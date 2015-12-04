@@ -73,12 +73,10 @@ public class LuciFragment extends Fragment {
                     if (result) {
                         message = "Luce " + nome + " " + stato;
                     }
-                    Log.i(TAG, "**** onReceive: " + message);
                     if(getView() != null) {
                         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
                     }
                 } else {
-                    Log.e(TAG, "onReceive: " + errore);
                     if(getView() != null) {
                         Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
                     }
@@ -131,6 +129,7 @@ public class LuciFragment extends Fragment {
             }
         });
         swipeContainer.setColorSchemeResources(R.color.primary);
+        swipeContainer.setRefreshing(true);
 
         return view;
     }
