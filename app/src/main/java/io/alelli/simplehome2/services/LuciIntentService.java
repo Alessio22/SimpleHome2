@@ -14,9 +14,12 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import io.alelli.simplehome2.R;
 import io.alelli.simplehome2.dao.ProfiloDAO;
 import io.alelli.simplehome2.models.Luci;
 import io.alelli.simplehome2.models.Profilo;
@@ -36,6 +39,7 @@ public class LuciIntentService extends IntentService {
     public static final String EXTRA_LIST = "io.alelli.simplehome2.services.LuciIntentService.extra.LIST";
     public static final String EXTRA_STATO = "io.alelli.simplehome2.services.LuciIntentService.extra.STATO";
     public static final String EXTRA_CHANGE_RESULT = "io.alelli.simplehome2.services.LuciIntentService.extra.change.RESULT";
+    public static final String EXTRA_ERROR = "io.alelli.simplehome2.services.LuciIntentService.extra.ERROR";
 
     private static Long idProfiloAttivo;
     private static String API = "";
@@ -68,14 +72,39 @@ public class LuciIntentService extends IntentService {
 
         switch (action) {
             case ACTION_LIST:
-                String jsonList = luciDesc();
+
                 final Intent intentBroadcastList = new Intent(BROADCAST_LIST);
+                String jsonList = null;
+                try {
+                    jsonList = luciDesc();
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "onHandleIntent: MalformedURLException: " + getString(R.string.errore_host_non_valido));
+                    intentBroadcastList.putExtra(EXTRA_ERROR, getString(R.string.errore_host_non_valido));
+                } catch (UnknownHostException e) {
+                    Log.e(TAG, "onHandleIntent: UnknownHostException: " + getString(R.string.errore_host_non_raggiungibile));
+                    intentBroadcastList.putExtra(EXTRA_ERROR, getString(R.string.errore_host_non_raggiungibile));
+                } catch (Exception e){
+                    Log.e(TAG, "onHandleIntent: Exception: " + getString(R.string.errore_generico));
+                    intentBroadcastList.putExtra(EXTRA_ERROR, getString(R.string.errore_generico));
+                }
                 intentBroadcastList.putExtra(EXTRA_LIST, jsonList);
                 sendBroadcast(intentBroadcastList);
                 break;
             case ACTION_CHANGE:
-                boolean result = changeStatoLuci(id);
                 final Intent intentBroadcastChange = new Intent(BROADCAST_CHANGE);
+                boolean result = false;
+                try {
+                    result = changeStatoLuci(id);
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "onHandleIntent: MalformedURLException: " + getString(R.string.errore_host_non_valido));
+                    intentBroadcastChange.putExtra(EXTRA_ERROR, getString(R.string.errore_host_non_valido));
+                } catch (UnknownHostException e) {
+                    Log.e(TAG, "onHandleIntent: UnknownHostException: " + getString(R.string.errore_host_non_raggiungibile));
+                    intentBroadcastChange.putExtra(EXTRA_ERROR, getString(R.string.errore_host_non_raggiungibile));
+                } catch (Exception e){
+                    Log.e(TAG, "onHandleIntent: Exception: " + getString(R.string.errore_generico));
+                    intentBroadcastChange.putExtra(EXTRA_ERROR, getString(R.string.errore_generico));
+                }
                 intentBroadcastChange.putExtra(EXTRA_CHANGE_RESULT, result);
                 intentBroadcastChange.putExtra(EXTRA_NOME, nome);
                 intentBroadcastChange.putExtra(EXTRA_STATO, stato);
@@ -84,7 +113,7 @@ public class LuciIntentService extends IntentService {
         }
     }
 
-    private String luciDesc() {
+    private String luciDesc() throws Exception {
         Log.i(TAG, "luciDesc");
         String json = "";
         HttpURLConnection httpURLConnection = null;
@@ -95,8 +124,6 @@ public class LuciIntentService extends IntentService {
             String basicAuth = "Basic " + Base64.encodeToString(userCredentials.getBytes("UTF-8"), Base64.DEFAULT);
             httpURLConnection.setRequestProperty("Authorization", basicAuth);
             json = parse(httpURLConnection.getInputStream());
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             if (httpURLConnection != null) httpURLConnection.disconnect();
         }
@@ -172,7 +199,7 @@ public class LuciIntentService extends IntentService {
         }
     }
 
-    private boolean changeStatoLuci(Integer id) {
+    private boolean changeStatoLuci(Integer id) throws Exception {
         Log.i(TAG, "changeStatoLuci id: " + id);
         boolean result = false;
         HttpURLConnection httpURLConnection = null;

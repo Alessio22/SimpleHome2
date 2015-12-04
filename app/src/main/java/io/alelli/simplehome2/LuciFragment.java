@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -43,29 +42,44 @@ public class LuciFragment extends Fragment {
             Log.i(TAG, intent.getAction());
 
             if(LuciIntentService.BROADCAST_LIST.equals(intent.getAction())) {
-                String json = intent.getStringExtra(LuciIntentService.EXTRA_LIST);
-                Type listType = new TypeToken<ArrayList<Luci>>() {}.getType();
-                ArrayList<Luci> listaLuci = new Gson().fromJson(json, listType);
-                mAdapter.addAll(listaLuci);
+                String errore = intent.getStringExtra(LuciIntentService.EXTRA_ERROR);
+                Log.d(TAG, "onReceive: " + errore);
+                if(errore == null) {
+                    String json = intent.getStringExtra(LuciIntentService.EXTRA_LIST);
+                    Type listType = new TypeToken<ArrayList<Luci>>() {}.getType();
+                    ArrayList<Luci> listaLuci = new Gson().fromJson(json, listType);
+                    mAdapter.addAll(listaLuci);
 
-                String message = "Aggiornamento completato";
-                if(getView() != null) {
-                    Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                    String message = "Aggiornamento completato";
+                    if(getView() != null) {
+                        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                    }
+                    swipeContainer.setRefreshing(false);
+                } else {
+                    if(getView() != null) {
+                        Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
+                    }
                 }
-                swipeContainer.setRefreshing(false);
             }
 
             if(LuciIntentService.BROADCAST_CHANGE.equals(intent.getAction())) {
-                boolean result = intent.getBooleanExtra(LuciIntentService.EXTRA_CHANGE_RESULT, false);
-                String stato = intent.getStringExtra(LuciIntentService.EXTRA_STATO);
-                String nome = intent.getStringExtra(LuciIntentService.EXTRA_NOME);
+                String errore = intent.getStringExtra(LuciIntentService.EXTRA_ERROR);
+                if(errore == null) {
+                    boolean result = intent.getBooleanExtra(LuciIntentService.EXTRA_CHANGE_RESULT, false);
+                    String stato = intent.getStringExtra(LuciIntentService.EXTRA_STATO);
+                    String nome = intent.getStringExtra(LuciIntentService.EXTRA_NOME);
 
-                String message = "Si è verificato un errore";
-                if(result) {
-                    message = "Luce " + nome + " " + stato;
-                }
-                if(getView() != null) {
-                    Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                    String message = getString(R.string.errore_change_stato_luci);
+                    if (result) {
+                        message = "Luce " + nome + " " + stato;
+                    }
+                    if(getView() != null) {
+                        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                    }
+                } else {
+                    if(getView() != null) {
+                        Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
+                    }
                 }
             }
 
@@ -81,6 +95,7 @@ public class LuciFragment extends Fragment {
         final SharedPreferences prefs = this.getActivity().getPreferences(Context.MODE_PRIVATE);
         ProfiloDAO profiloDAO = new ProfiloDAO(prefs);
         idProfiloAttivo = profiloDAO.getIdProfileActive();
+        Log.i(TAG, "onCreate: " + idProfiloAttivo);
 
         mAdapter = new LuciAdapter(context);
 
@@ -114,6 +129,7 @@ public class LuciFragment extends Fragment {
             }
         });
         swipeContainer.setColorSchemeResources(R.color.primary);
+        swipeContainer.setRefreshing(true);
 
         return view;
     }
@@ -123,15 +139,6 @@ public class LuciFragment extends Fragment {
         Log.i(TAG, "onDetach");
         super.onDetach();
         context.unregisterReceiver(receiver);
-    }
-
-    public void setEmptyText(CharSequence emptyText) {
-        Log.i(TAG, "setEmptyText");
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyView instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
     }
 
 }

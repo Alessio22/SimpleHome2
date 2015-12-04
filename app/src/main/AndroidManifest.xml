@@ -55,7 +55,11 @@
         <activity
             android:name=".WelcomeActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".services.TemperatureIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

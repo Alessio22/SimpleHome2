@@ -1,11 +1,10 @@
 package io.alelli.simplehome2;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -52,14 +52,17 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         List<Profilo> profili = profiloDAO.findAll();
+        Profilo profiloAttivo = profiloDAO.findById(profiloDAO.getIdProfileActive());
         if(profili.size() == 0) {
-            // TODO start WelcomeActivity
             final Intent intent = new Intent(context, WelcomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+        } else if(profiloAttivo == null) {
+            profiloDAO.activateProfile(new Long(profili.get(0).getId()));
         }
+
         IProfile[] profiles = new IProfile[profili.size()];
         for (int i = 0; i < profili.size(); i++) {
             ProfileDrawerItem profile = new ProfileDrawerItem()
@@ -89,9 +92,10 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .build();
 
+
         Long idProfiloAttivo = profiloDAO.getIdProfileActive();
         Log.i(TAG, "idProfiloAttivo: " + idProfiloAttivo);
-        headerResult.setActiveProfile(idProfiloAttivo.intValue());
+        headerResult.setActiveProfile(idProfiloAttivo.intValue());;
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
         PrimaryDrawerItem home = new PrimaryDrawerItem()
@@ -110,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 .withName(R.string.settings_nav).withTextColorRes(R.color.secondary_text)
                 .withIcon(R.drawable.ic_settings_24dp);
         SecondaryDrawerItem about = new SecondaryDrawerItem()
-                .withName(R.string.about_nav).withTextColorRes(R.color.secondary_text)
+                .withName(R.string.info_nav).withTextColorRes(R.color.secondary_text)
                 .withIcon(R.drawable.ic_info_24dp);
 
         drawer = new DrawerBuilder()
@@ -139,16 +143,7 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 break;
                             case 7:
-                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setTitle(R.string.about_dialog_title);
-                                builder.setPositiveButton(R.string.about_dialog_close, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        Log.i(TAG, "Dialog Ok");
-                                    }
-                                });
-
-                                AlertDialog dialog = builder.create();
-                                dialog.show();
+                                openFragment(new InfoFragment(), getString(R.string.info_title_fragment));
                                 break;
                         }
                         return true;
@@ -188,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.replace(R.id.content_frame, fragment);
-            ft.addToBackStack(null);
             ft.commit();
         }
 
@@ -199,16 +193,24 @@ public class MainActivity extends AppCompatActivity {
         drawer.closeDrawer();
     }
 
+    boolean dblClickToExit = false;
+
     @Override
     public void onBackPressed() {
-        int count = getFragmentManager().getBackStackEntryCount();
         if (drawer.isDrawerOpen()) {
             drawer.closeDrawer();
-        } else if (count == 0) {
-            super.onBackPressed();
         } else {
-            //getFragmentManager().popBackStack();
-            super.onBackPressed();
+            if(dblClickToExit) {
+                super.onBackPressed();
+            }
+            dblClickToExit = true;
+            Toast.makeText(context, getString(R.string.dbl_back_to_exit), Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dblClickToExit = false;
+                }
+            }, 2000);
         }
     }
 }
