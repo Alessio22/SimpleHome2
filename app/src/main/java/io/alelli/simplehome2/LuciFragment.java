@@ -64,7 +64,7 @@ public class LuciFragment extends Fragment {
 
             if(LuciIntentService.BROADCAST_CHANGE.equals(intent.getAction())) {
                 String errore = intent.getStringExtra(LuciIntentService.EXTRA_ERROR);
-                if(errore != null) {
+                if(errore == null) {
                     boolean result = intent.getBooleanExtra(LuciIntentService.EXTRA_CHANGE_RESULT, false);
                     String stato = intent.getStringExtra(LuciIntentService.EXTRA_STATO);
                     String nome = intent.getStringExtra(LuciIntentService.EXTRA_NOME);
@@ -73,10 +73,12 @@ public class LuciFragment extends Fragment {
                     if (result) {
                         message = "Luce " + nome + " " + stato;
                     }
+                    Log.i(TAG, "**** onReceive: " + message);
                     if(getView() != null) {
                         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
                     }
                 } else {
+                    Log.e(TAG, "onReceive: " + errore);
                     if(getView() != null) {
                         Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
                     }

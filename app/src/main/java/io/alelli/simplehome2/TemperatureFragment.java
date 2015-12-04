@@ -62,7 +62,13 @@ public class TemperatureFragment extends Fragment {
                 }
             }
 
-            // TODO broadcast aumenta e diminuisci temp
+            if(TemperatureIntentService.BROADCAST_UP.equals(intent.getAction())) {
+                // TODO broadcast aumenta temp
+            }
+
+            if(TemperatureIntentService.BROADCAST_DOWN.equals(intent.getAction())) {
+                // TODO broadcast diminuisci temp
+            }
 
         }
     };
@@ -87,7 +93,8 @@ public class TemperatureFragment extends Fragment {
 
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(TemperatureIntentService.BROADCAST_LIST);
-        // TODO broadcast aumenta e diminuisci temp
+        intentFilter.addAction(TemperatureIntentService.BROADCAST_UP);
+        intentFilter.addAction(TemperatureIntentService.BROADCAST_DOWN);
         context.registerReceiver(receiver, intentFilter);
     }
 

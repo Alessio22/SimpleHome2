@@ -59,7 +59,6 @@ public class LuciIntentService extends IntentService {
         Log.d(TAG, "action: " + action);
 
         idProfiloAttivo = intent.getLongExtra(EXTRA_ID_PROFILO, 0);
-        Log.i(TAG, "onHandleIntent: " + idProfiloAttivo);
         final Integer id = intent.getIntExtra(EXTRA_ID, 0);
         final String nome = intent.getStringExtra(EXTRA_NOME);
         final String stato = intent.getStringExtra(EXTRA_STATO);

@@ -91,8 +91,10 @@ public class TemperatureIntentService extends IntentService {
                 sendBroadcast(intentBroadcastList);
                 break;
             case ACTION_UP:
+                // TODO chiamata aumenta temperatura
                 break;
             case ACTION_DOWN:
+                // TODO chiamata diminuisci temperatura
                 break;
         }
     }
