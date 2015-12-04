@@ -38,8 +38,5 @@
 
     <string name="errore_change_temperatura">Cambio temperatura non riuscito</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dbl_back_to_exit">Premi ancora per uscire</string>
-
 </resources>
