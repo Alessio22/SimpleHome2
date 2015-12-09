@@ -15,7 +15,6 @@
     <color name="luci">#FFEB3B</color>
     <color name="temperatura">#2196F3</color>
     <color name="allarme">#F44336</color>
-    <color name="informazioni">#727272</color>
 
     <color name="black_overlay">#66000000</color>
 </resources>
