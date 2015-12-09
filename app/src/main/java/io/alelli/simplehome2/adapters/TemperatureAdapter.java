@@ -46,7 +46,7 @@ public class TemperatureAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return elencoTemperature.get(position).getId();
     }
 
     @Override
@@ -86,7 +86,7 @@ public class TemperatureAdapter extends BaseAdapter {
         btnDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Integer id = position;
+                Long id = getItemId(position);
                 Log.i(TAG, "onClick btnDown: " + id);
                 String nomeLuce = (String) descrizione.getText();
 
@@ -101,13 +101,17 @@ public class TemperatureAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void clear() {
+        elencoTemperature.clear();
+        notifyDataSetChanged();
+    }
     public void add(Temperature temperatura) {
         elencoTemperature.add(temperatura);
         notifyDataSetChanged();
     }
 
     public void addAll(ArrayList<Temperature> temperature) {
-        elencoTemperature = new ArrayList<>();
+        elencoTemperature.clear();
         elencoTemperature.addAll(temperature);
         notifyDataSetChanged();
     }

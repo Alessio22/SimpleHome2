@@ -15,13 +15,60 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/descrizione_temperatura"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:padding="8dp"
+            android:textColor="#222"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/temperaturaEffettiva"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/descrizione_temperatura"
-            android:layout_gravity="left|top"
-            android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/temperatura" />
+            android:layout_below="@+id/descrizione_temperatura"
+            android:maxLines="3"
+            android:padding="8dp"
+            android:textColor="#666"
+            android:textSize="14dp"
+            android:text="Temperatura effettiva:"/>
+        <TextView
+            android:id="@+id/temperatura"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:padding="8dp"
+            android:textColor="#666"
+            android:textSize="14dp"
+            android:layout_alignTop="@+id/temperaturaEffettiva"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/set_point_temperaturaDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:padding="8dp"
+            android:textColor="#666"
+            android:textSize="14dp"
+            android:text="Set Point:"
+            android:layout_below="@+id/temperaturaEffettiva"
+            android:layout_alignParentStart="true" />
+        <TextView
+            android:id="@+id/set_point_temperatura"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:padding="8dp"
+            android:textColor="#666"
+            android:textSize="14dp"
+            android:layout_below="@+id/temperaturaEffettiva"
+            android:layout_toEndOf="@+id/set_point_temperaturaDesc"
+            android:textStyle="bold" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_down_teperatura"
@@ -34,17 +81,6 @@
             android:layout_margin="10dp"
             card_view:backgroundTint="@color/material_grey_300" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/set_point_temperatura"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_alignTop="@+id/btn_up_teperatura"
-            android:layout_centerHorizontal="true" />
-
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_up_teperatura"
             android:layout_width="wrap_content"
@@ -56,17 +92,6 @@
             android:layout_marginRight="10dp"
             android:layout_alignTop="@+id/btn_down_teperatura"
             android:layout_alignParentEnd="true" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/temperatura"
-            android:layout_gravity="left|top"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_below="@+id/descrizione_temperatura"
-            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
 

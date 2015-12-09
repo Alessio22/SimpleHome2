@@ -196,8 +196,9 @@ public class TemperatureIntentService extends IntentService {
             }
             String name = parser.getName();
             if(name.startsWith("temp")) {
-                Integer pos = Integer.parseInt( name.substring(4) );
+                Integer pos = Integer.parseInt(name.substring(4));
                 if (parser.next() == XmlPullParser.TEXT) {
+                    temperature.get(pos).setId(new Long(pos));
                     temperature.get(pos).setTemperatura(parser.getText());
                     parser.nextTag();
                 }
@@ -217,13 +218,7 @@ public class TemperatureIntentService extends IntentService {
                 skip(parser);
             }
         }
-        ArrayList<Temperature> result = new ArrayList();
-        for (Temperature t : temperature) {
-            if(t.getTxtTemp() != null) {
-                result.add(t);
-            }
-        }
-        return result;
+        return temperature;
     }
 
     private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
