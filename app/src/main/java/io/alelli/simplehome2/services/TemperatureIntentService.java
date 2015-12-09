@@ -198,6 +198,7 @@ public class TemperatureIntentService extends IntentService {
             if(name.startsWith("temp")) {
                 Integer pos = Integer.parseInt( name.substring(4) );
                 if (parser.next() == XmlPullParser.TEXT) {
+                    temperature.get(pos).setId(new Long(pos));
                     temperature.get(pos).setTemperatura(parser.getText());
                     parser.nextTag();
                 }

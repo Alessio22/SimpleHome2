@@ -168,7 +168,6 @@ public class LuciIntentService extends IntentService {
                     parser.nextTag();
                 }
                 if(desc != null) {
-                    Log.i(TAG, id + ": " + desc);
                     boolean accesa = false;
                     if(charArray != null) {
                         accesa = charArray[id] != '0' ? true : false;
