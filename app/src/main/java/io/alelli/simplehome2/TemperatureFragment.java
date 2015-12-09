@@ -49,7 +49,12 @@ public class TemperatureFragment extends Fragment {
                     String json = intent.getStringExtra(TemperatureIntentService.EXTRA_LIST);
                     Type listType = new TypeToken<ArrayList<Temperature>>() {}.getType();
                     ArrayList<Temperature> listaTemperature = new Gson().fromJson(json, listType);
-                    mAdapter.addAll(listaTemperature);
+                    mAdapter.clear();
+                    for (Temperature t : listaTemperature) {
+                        if(t.getTxtTemp() != null) {
+                            mAdapter.add(t);
+                        }
+                    }
                     String message = "Aggiornamento completato";
                     if(getView() != null) {
                         Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();

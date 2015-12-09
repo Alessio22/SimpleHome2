@@ -101,13 +101,17 @@ public class TemperatureAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void clear() {
+        elencoTemperature.clear();
+        notifyDataSetChanged();
+    }
     public void add(Temperature temperatura) {
         elencoTemperature.add(temperatura);
         notifyDataSetChanged();
     }
 
     public void addAll(ArrayList<Temperature> temperature) {
-        elencoTemperature = new ArrayList<>();
+        elencoTemperature.clear();
         elencoTemperature.addAll(temperature);
         notifyDataSetChanged();
     }
