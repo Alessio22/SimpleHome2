@@ -1,5 +1,7 @@
 package io.alelli.simplehome2;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -99,17 +102,18 @@ public class MainActivity extends AppCompatActivity {
 
         //if you want to update the items at a later time it is recommended to keep it in a variable
         PrimaryDrawerItem home = new PrimaryDrawerItem()
-                .withName(R.string.home_nav)
+                .withName(R.string.home_nav).withTextColorRes(R.color.home)
                 .withIcon(R.drawable.ic_home_24dp);
         PrimaryDrawerItem luci = new PrimaryDrawerItem()
-                .withName(R.string.luci_nav)
+                .withName(R.string.luci_nav).withTextColorRes(R.color.luci)
                 .withIcon(R.drawable.ic_wb_incandescent_24dp);
         PrimaryDrawerItem temperature = new PrimaryDrawerItem()
-                .withName(R.string.temperature_nav)
+                .withName(R.string.temperature_nav).withTextColorRes(R.color.temperatura)
                 .withIcon(R.drawable.ic_ac_unit_black_24px);
         PrimaryDrawerItem allarme = new PrimaryDrawerItem().withSelectable(false)
-                .withName(R.string.allarme_nav)
+                .withName(R.string.allarme_nav).withTextColorRes(R.color.allarme)
                 .withIcon(R.drawable.ic_security_black_24px);
+
         SecondaryDrawerItem settings = new SecondaryDrawerItem()
                 .withName(R.string.settings_nav).withTextColorRes(R.color.secondary_text)
                 .withIcon(R.drawable.ic_settings_24dp);
@@ -128,15 +132,19 @@ public class MainActivity extends AppCompatActivity {
                         switch (position) {
                             case 1:
                                 openFragment(new HomeFragment(), null);
+                                animateAppAndStatusBar(R.color.home);
                                 break;
                             case 2:
                                 openFragment(new LuciFragment(), getString(R.string.luci_title_fragment));
+                                animateAppAndStatusBar(R.color.luci);
                                 break;
                             case 3:
                                 openFragment(new TemperatureFragment(), getString(R.string.temperature_title_fragment));
+                                animateAppAndStatusBar(R.color.temperatura);
                                 break;
                             case 4:
                                 //openFragment(new AllarmeFragment(), getString(R.string.allarme_title_fragment));
+                                //animateAppAndStatusBar(R.color.allarme);
                                 break;
                             case 6:
                                 final Intent intent = new Intent(context, SettingsActivity.class);
@@ -144,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case 7:
                                 openFragment(new InfoFragment(), getString(R.string.info_title_fragment));
+                                animateAppAndStatusBar(R.color.informazioni);
                                 break;
                         }
                         return true;
@@ -191,6 +200,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         drawer.closeDrawer();
+    }
+
+    private void animateAppAndStatusBar(final int toColor) {
+        Animator animator = ViewAnimationUtils.createCircularReveal(
+                toolbar,
+                toolbar.getWidth() / 2,
+                toolbar.getHeight() / 2, 0,
+                toolbar.getWidth() / 2);
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                toolbar.setBackgroundColor(getResources().getColor(toColor));
+            }
+        });
+
+        animator.setStartDelay(200);
+        animator.setDuration(125);
+        animator.start();
+        toolbar.setVisibility(View.VISIBLE);
     }
 
     boolean dblClickToExit = false;
