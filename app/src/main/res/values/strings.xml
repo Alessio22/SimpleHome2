@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SimpleHome 2</string>
+    <string name="app_name">SimpleHome</string>
 
     <string name="home_nav">Home</string>
     <string name="home_title_frangment">Home</string>
@@ -39,4 +39,5 @@
     <string name="errore_change_temperatura">Cambio temperatura non riuscito</string>
 
     <string name="dbl_back_to_exit">Premi ancora per uscire</string>
+    <string name="logo">logo</string>
 </resources>
