@@ -4,9 +4,6 @@ import android.content.Context;
 
 import com.orm.SugarRecord;
 
-/**
- * Created by Alessio on 23/11/2015.
- */
 public class Profilo extends SugarRecord<Profilo> {
     private String etichetta;
     private String url;

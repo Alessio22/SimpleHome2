@@ -40,4 +40,6 @@
 
     <string name="dbl_back_to_exit">Premi ancora per uscire</string>
     <string name="logo">logo</string>
+    <string name="allarme_disattivato">disattivato</string>
+    <string name="allarme_attivato">attivato</string>
 </resources>
