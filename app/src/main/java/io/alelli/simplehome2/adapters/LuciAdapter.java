@@ -19,9 +19,6 @@ import io.alelli.simplehome2.dao.ProfiloDAO;
 import io.alelli.simplehome2.models.Luci;
 import io.alelli.simplehome2.services.LuciIntentService;
 
-/**
- * Created by Alessio on 12/11/2015.
- */
 public class LuciAdapter extends BaseAdapter {
     private static final String TAG = "LuciAdapter";
 
@@ -52,7 +49,7 @@ public class LuciAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Luci luce = elencoLuci.get(position);
-        convertView = LayoutInflater.from(context).inflate(R.layout.luci_list_item, parent, false);
+        convertView = LayoutInflater.from(context).inflate(R.layout.list_item_luci, parent, false);
 
         final SharedPreferences prefs = ((MainActivity) context).getPreferences(Context.MODE_PRIVATE);
         ProfiloDAO profiloDAO = new ProfiloDAO(prefs);

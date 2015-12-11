@@ -13,9 +13,6 @@ import java.util.List;
 import io.alelli.simplehome2.R;
 import io.alelli.simplehome2.models.Profilo;
 
-/**
- * Created by Alessio on 12/11/2015.
- */
 public class ProfiliAdapter extends BaseAdapter {
     private static final String TAG = "ProfiliAdapter";
 
@@ -45,7 +42,7 @@ public class ProfiliAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Profilo profilo = getItem(position);
-        convertView = LayoutInflater.from(context).inflate(R.layout.profilo_list_item, parent, false);
+        convertView = LayoutInflater.from(context).inflate(R.layout.list_item_profili, parent, false);
 
         TextView etichetta = (TextView) convertView.findViewById(R.id.profilo_etichetta);
         etichetta.setText(profilo.getEtichetta());
