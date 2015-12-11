@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                                 openFragment(new TemperatureFragment(), getString(R.string.temperature_title_fragment));
                                 break;
                             case 4:
-                                //openFragment(new AllarmeFragment(), getString(R.string.allarme_title_fragment));
+                                openFragment(new AllarmeFragment(), getString(R.string.allarme_title_fragment));
                                 break;
                             case 6:
                                 final Intent intent = new Intent(context, SettingsActivity.class);

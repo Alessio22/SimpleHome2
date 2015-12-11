@@ -38,6 +38,15 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        Button btnAllarme = (Button) view.findViewById(R.id.button_allarme);
+        btnAllarme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new AllarmeFragment();
+                openFragment(fragment);
+            }
+        });
+
         Button btnSettings = (Button) view.findViewById(R.id.button_settings);
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override

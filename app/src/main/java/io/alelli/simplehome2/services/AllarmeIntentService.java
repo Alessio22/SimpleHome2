@@ -58,12 +58,13 @@ public class AllarmeIntentService extends IntentService {
         Log.d(TAG, "action: " + action);
 
         idProfiloAttivo = intent.getLongExtra(EXTRA_ID_PROFILO, 0);
-        final Integer id = intent.getIntExtra(EXTRA_ID, 0);
+        final String id = intent.getStringExtra(EXTRA_ID);
         final String nome = intent.getStringExtra(EXTRA_NOME);
         final String stato = intent.getStringExtra(EXTRA_STATO);
 
         ProfiloDAO dao = new ProfiloDAO(getBaseContext());
         Profilo profilo = dao.findById(idProfiloAttivo);
+        Log.i(TAG, "getView: " + idProfiloAttivo);
 
         API = profilo.getUrl();
         USERNAME = profilo.getUsername();
@@ -143,10 +144,9 @@ public class AllarmeIntentService extends IntentService {
         }
         return result;
     }
-    // TODO parse xml allarmi
+
     private ArrayList<Allarme> readAllarmi(XmlPullParser parser) throws XmlPullParserException, IOException {
         ArrayList<Allarme> allarmi = new ArrayList();
-        char[] charArray = null;
 
         parser.require(XmlPullParser.START_TAG, ns, "response");
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -154,24 +154,29 @@ public class AllarmeIntentService extends IntentService {
                 continue;
             }
             String name = parser.getName();
-            if (name.startsWith("stato")) {
+            Integer i = allarmi.size() - 1;
+            if (name.startsWith("statoAreaP1")) {
                 if (parser.next() == XmlPullParser.TEXT) {
-                    charArray = parser.getText().toCharArray();
+                    allarmi.get(i).setStatoP1("1".equals(parser.getText()));
                     parser.nextTag();
                 }
-            } else if (name.startsWith("desc")) {
-                Integer id = Integer.parseInt( name.substring(4) );
-                String desc = null;
+            } else if (name.startsWith("statoAreaP2")) {
                 if (parser.next() == XmlPullParser.TEXT) {
-                    desc = parser.getText();
+                    allarmi.get(i).setStatoP2("1".equals(parser.getText()));
                     parser.nextTag();
                 }
-                if(desc != null) {
-                    boolean accesa = false;
-                    if(charArray != null) {
-                        accesa = charArray[id] != '0' ? true : false;
-                    }
-                    allarmi.add(new Allarme(id, false, false, false));
+            } else if(name.startsWith("statoArea")) {
+                if (parser.next() == XmlPullParser.TEXT) {
+                    Allarme allarme = new Allarme();
+                    allarme.setId( allarmi.size() );
+                    allarme.setStato( "1".equals(parser.getText()) );
+                    allarmi.add(allarme);
+                    parser.nextTag();
+                }
+            } else if (name.startsWith("allarmeArea")) {
+                removeByIdAllarme(allarmi, Integer.parseInt(name.substring(11)));
+                if (parser.next() == XmlPullParser.TEXT) {
+                    parser.nextTag();
                 }
             } else {
                 skip(parser);
@@ -197,11 +202,20 @@ public class AllarmeIntentService extends IntentService {
         }
     }
 
-    private boolean changeStatoAllarme(Integer id) throws Exception {
+    private void removeByIdAllarme(ArrayList<Allarme> allarmi, Integer id) {
+        for (int i = 0; i < allarmi.size(); i++) {
+            if(allarmi.get(i).getId() == id) {
+                allarmi.remove(i);
+            }
+        }
+    }
+
+    private boolean changeStatoAllarme(String id) throws Exception {
         Log.i(TAG, "changeStatoAllarme id: " + id);
         boolean result = false;
         HttpURLConnection httpURLConnection = null;
         try {
+            Log.i(TAG, "changeStatoAllarme: "+ API + "user/statoAree.cgi?statoArea="+id);
             URL url = new URL(API + "user/statoAree.cgi?statoArea="+id);
             httpURLConnection = (HttpURLConnection) url.openConnection();
             String userCredentials = USERNAME+":"+PASSWORD;

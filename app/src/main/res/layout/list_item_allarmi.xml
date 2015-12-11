@@ -25,14 +25,14 @@
         <Switch
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/switch_p2"
+            android:id="@+id/switch_p1"
             android:padding="10dp"
             android:checked="false" />
 
         <Switch
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/switch_p1"
+            android:id="@+id/switch_p2"
             android:padding="10dp"
             android:checked="false" />
     </LinearLayout>

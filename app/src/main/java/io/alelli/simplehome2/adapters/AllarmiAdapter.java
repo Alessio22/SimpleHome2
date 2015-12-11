@@ -3,6 +3,7 @@ package io.alelli.simplehome2.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import io.alelli.simplehome2.R;
 import io.alelli.simplehome2.dao.ProfiloDAO;
 import io.alelli.simplehome2.models.Allarme;
 import io.alelli.simplehome2.services.AllarmeIntentService;
-import io.alelli.simplehome2.services.LuciIntentService;
 
 public class AllarmiAdapter extends BaseAdapter {
     private static final String TAG = "TemperatureAdapter";
@@ -54,6 +54,7 @@ public class AllarmiAdapter extends BaseAdapter {
         final SharedPreferences prefs = ((MainActivity) context).getPreferences(Context.MODE_PRIVATE);
         ProfiloDAO profiloDAO = new ProfiloDAO(prefs);
         final Long idProfiloAttivo = profiloDAO.getIdProfileActive();
+        Log.i(TAG, "getView: " + idProfiloAttivo);
         allarmeService = new Intent(context, AllarmeIntentService.class);
 
         Switch switchStato = (Switch) convertView.findViewById(R.id.switch_stato);
@@ -69,12 +70,12 @@ public class AllarmiAdapter extends BaseAdapter {
                 Integer idArea = (Integer) switchStato.getTag();
                 String nomeArea = (String) switchStato.getText();
 
-                allarmeService.setAction(LuciIntentService.ACTION_CHANGE);
-                allarmeService.putExtra(LuciIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
-                allarmeService.putExtra(LuciIntentService.EXTRA_ID, idArea);
-                allarmeService.putExtra(LuciIntentService.EXTRA_NOME, nomeArea);
+                allarmeService.setAction(AllarmeIntentService.ACTION_CHANGE);
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_ID, idArea.toString());
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_NOME, nomeArea);
 
-                allarmeService.putExtra(LuciIntentService.EXTRA_STATO, isChecked ? context.getString(R.string.allarme_attivato) : context.getString(R.string.allarme_disattivato));
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_STATO, isChecked ? context.getString(R.string.allarme_attivato) : context.getString(R.string.allarme_disattivato));
                 context.startService(allarmeService);
             }
         });
@@ -83,11 +84,43 @@ public class AllarmiAdapter extends BaseAdapter {
         switchP1.setTag("P1" + allarme.getId());
         switchP1.setText("Area " + allarme.getId() + " P1");
         switchP1.setChecked(allarme.getStatoP1());
+        switchP1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Switch switchStato = (Switch) buttonView;
+                String idArea = (String) switchStato.getTag();
+                String nomeArea = (String) switchStato.getText();
+
+                allarmeService.setAction(AllarmeIntentService.ACTION_CHANGE);
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_ID, idArea);
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_NOME, nomeArea);
+
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_STATO, isChecked ? context.getString(R.string.allarme_attivato) : context.getString(R.string.allarme_disattivato));
+                context.startService(allarmeService);
+            }
+        });
 
         Switch switchP2 = (Switch) convertView.findViewById(R.id.switch_p2);
         switchP2.setTag("P2" + allarme.getId());
-        switchP1.setText("Area " + allarme.getId() + " P2");
+        switchP2.setText("Area " + allarme.getId() + " P2");
         switchP2.setChecked(allarme.getStatoP2());
+        switchP2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Switch switchStato = (Switch) buttonView;
+                String idArea = (String) switchStato.getTag();
+                String nomeArea = (String) switchStato.getText();
+
+                allarmeService.setAction(AllarmeIntentService.ACTION_CHANGE);
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_ID, idArea);
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_NOME, nomeArea);
+
+                allarmeService.putExtra(AllarmeIntentService.EXTRA_STATO, isChecked ? context.getString(R.string.allarme_attivato) : context.getString(R.string.allarme_disattivato));
+                context.startService(allarmeService);
+            }
+        });
 
         return convertView;
     }

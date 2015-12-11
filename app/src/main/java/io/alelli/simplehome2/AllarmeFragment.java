@@ -81,6 +81,7 @@ public class AllarmeFragment extends Fragment {
                         Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
                     }
                 }
+                context.startService(allarmeService);
             }
 
         }
@@ -114,7 +115,7 @@ public class AllarmeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView");
-        View view = inflater.inflate(R.layout.fragment_luci, container, false);
+        View view = inflater.inflate(R.layout.fragment_allarme_list, container, false);
 
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
