@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import io.alelli.simplehome2.R;
 import io.alelli.simplehome2.dao.ProfiloDAO;
 import io.alelli.simplehome2.models.Profilo;
-import io.alelli.simplehome2.models.Temperature;
+import io.alelli.simplehome2.models.Temperatura;
 
 public class TemperatureIntentService extends IntentService {
     private static final String TAG = "TemperatureService";
@@ -183,10 +183,10 @@ public class TemperatureIntentService extends IntentService {
         return result;
     }
 
-    private ArrayList<Temperature> readDescTemp(XmlPullParser parser) throws XmlPullParserException, IOException {
-        ArrayList<Temperature> temperature = new ArrayList();
+    private ArrayList<Temperatura> readDescTemp(XmlPullParser parser) throws XmlPullParserException, IOException {
+        ArrayList<Temperatura> temperatura = new ArrayList();
         for (int i = 0; i<24; i++) {
-            temperature.add(new Temperature());
+            temperatura.add(new Temperatura());
         }
 
         parser.require(XmlPullParser.START_TAG, ns, "response");
@@ -198,27 +198,27 @@ public class TemperatureIntentService extends IntentService {
             if(name.startsWith("temp")) {
                 Integer pos = Integer.parseInt(name.substring(4));
                 if (parser.next() == XmlPullParser.TEXT) {
-                    temperature.get(pos).setId(new Long(pos));
-                    temperature.get(pos).setTemperatura(parser.getText());
+                    temperatura.get(pos).setId(new Long(pos));
+                    temperatura.get(pos).setTemperatura(parser.getText());
                     parser.nextTag();
                 }
             } else if (name.startsWith("setpoint")) {
                 Integer pos = Integer.parseInt( name.substring(8) );
                 if (parser.next() == XmlPullParser.TEXT) {
-                    temperature.get(pos).setSetPoint(parser.getText());
+                    temperatura.get(pos).setSetPoint(parser.getText());
                     parser.nextTag();
                 }
             } else if (name.startsWith("txttemp")) {
                 Integer pos = Integer.parseInt( name.substring(7) );
                 if (parser.next() == XmlPullParser.TEXT) {
-                    temperature.get(pos).setTxtTemp(parser.getText());
+                    temperatura.get(pos).setTxtTemp(parser.getText());
                     parser.nextTag();
                 }
             } else {
                 skip(parser);
             }
         }
-        return temperature;
+        return temperatura;
     }
 
     private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {

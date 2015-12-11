@@ -1,17 +1,14 @@
 package io.alelli.simplehome2.models;
 
-/**
- * Created by Alessio on 04/12/2015.
- */
-public class Temperature {
+public class Temperatura {
     private Long id;
     private String temperatura;
     private String setPoint;
     private String txtTemp;
 
-    public Temperature() {}
+    public Temperatura() {}
 
-    public Temperature(String temperatura, String setPoint, String txtTemp) {
+    public Temperatura(String temperatura, String setPoint, String txtTemp) {
         this.temperatura = temperatura;
         this.setPoint = setPoint;
         this.txtTemp = txtTemp;

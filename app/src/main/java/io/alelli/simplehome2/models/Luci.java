@@ -1,8 +1,5 @@
 package io.alelli.simplehome2.models;
 
-/**
- * Created by Alessio on 12/11/2015.
- */
 public class Luci {
     private Integer id;
     private String nome;

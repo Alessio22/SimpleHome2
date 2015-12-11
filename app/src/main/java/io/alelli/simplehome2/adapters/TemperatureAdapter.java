@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import io.alelli.simplehome2.MainActivity;
 import io.alelli.simplehome2.R;
 import io.alelli.simplehome2.dao.ProfiloDAO;
-import io.alelli.simplehome2.models.Temperature;
+import io.alelli.simplehome2.models.Temperatura;
 import io.alelli.simplehome2.services.TemperatureIntentService;
 
 /**
@@ -28,7 +28,7 @@ public class TemperatureAdapter extends BaseAdapter {
     private Context context;
     private Intent temperatureService;
 
-    private ArrayList<Temperature> elencoTemperature = new ArrayList<>();
+    private ArrayList<Temperatura> elencoTemperature = new ArrayList<>();
 
     public TemperatureAdapter(Context context) {
         this.context = context;
@@ -40,7 +40,7 @@ public class TemperatureAdapter extends BaseAdapter {
     }
 
     @Override
-    public Temperature getItem(int position) {
+    public Temperatura getItem(int position) {
         return elencoTemperature.get(position);
     }
 
@@ -51,8 +51,8 @@ public class TemperatureAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Temperature temperatura = elencoTemperature.get(position);
-        convertView = LayoutInflater.from(context).inflate(R.layout.temperature_list_item, parent, false);
+        Temperatura temperatura = elencoTemperature.get(position);
+        convertView = LayoutInflater.from(context).inflate(R.layout.list_item_temperature, parent, false);
 
         final SharedPreferences prefs = ((MainActivity) context).getPreferences(Context.MODE_PRIVATE);
         ProfiloDAO profiloDAO = new ProfiloDAO(prefs);
@@ -105,14 +105,14 @@ public class TemperatureAdapter extends BaseAdapter {
         elencoTemperature.clear();
         notifyDataSetChanged();
     }
-    public void add(Temperature temperatura) {
+    public void add(Temperatura temperatura) {
         elencoTemperature.add(temperatura);
         notifyDataSetChanged();
     }
 
-    public void addAll(ArrayList<Temperature> temperature) {
+    public void addAll(ArrayList<Temperatura> temperatura) {
         elencoTemperature.clear();
-        elencoTemperature.addAll(temperature);
+        elencoTemperature.addAll(temperatura);
         notifyDataSetChanged();
     }
 }

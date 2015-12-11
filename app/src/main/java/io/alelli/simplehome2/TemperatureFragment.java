@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 import io.alelli.simplehome2.adapters.TemperatureAdapter;
 import io.alelli.simplehome2.dao.ProfiloDAO;
-import io.alelli.simplehome2.models.Temperature;
+import io.alelli.simplehome2.models.Temperatura;
 import io.alelli.simplehome2.services.TemperatureIntentService;
 
 
@@ -47,10 +47,10 @@ public class TemperatureFragment extends Fragment {
                 String errore = intent.getStringExtra(TemperatureIntentService.EXTRA_ERROR);
                 if(errore == null) {
                     String json = intent.getStringExtra(TemperatureIntentService.EXTRA_LIST);
-                    Type listType = new TypeToken<ArrayList<Temperature>>() {}.getType();
-                    ArrayList<Temperature> listaTemperature = new Gson().fromJson(json, listType);
+                    Type listType = new TypeToken<ArrayList<Temperatura>>() {}.getType();
+                    ArrayList<Temperatura> listaTemperature = new Gson().fromJson(json, listType);
                     mAdapter.clear();
-                    for (Temperature t : listaTemperature) {
+                    for (Temperatura t : listaTemperature) {
                         if(t.getTxtTemp() != null) {
                             mAdapter.add(t);
                         }
@@ -148,7 +148,7 @@ public class TemperatureFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView");
-        View view = inflater.inflate(R.layout.fragment_temperature, container, false);
+        View view = inflater.inflate(R.layout.fragment_temperature_list, container, false);
 
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
