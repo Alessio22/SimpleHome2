@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.net.MalformedURLException;
@@ -59,6 +60,8 @@ public class SettingsActivity extends AppCompatActivity {
                 View layout = inflater.inflate(R.layout.dialog_new_profile, (ViewGroup) findViewById(R.id.content_layout));
 
                 final EditText etichettaEditText = (EditText) layout.findViewById(R.id.dialog_profilo_etichetta);
+                final RadioButton metodoRadioHTTP = (RadioButton) layout.findViewById(R.id.dialog_profilo_metodo_http);
+                final RadioButton metodoRadioHTTPS = (RadioButton) layout.findViewById(R.id.dialog_profilo_metodo_https);
                 final EditText urlEditText = (EditText) layout.findViewById(R.id.dialog_profilo_url);
                 final EditText usernameEditText = (EditText) layout.findViewById(R.id.dialog_profilo_username);
                 final EditText passwordEditText = (EditText) layout.findViewById(R.id.dialog_profilo_password);
@@ -75,13 +78,24 @@ public class SettingsActivity extends AppCompatActivity {
                             etichettaEditText.setError("Etichetta obbligatoria");
                             hasError = true;
                         }
-                        String url = urlEditText.getText().toString();
+
+                        String url = "";
+                        if (metodoRadioHTTP.isChecked()) {
+                            url = String.valueOf(metodoRadioHTTP.getText());
+                        } else if (metodoRadioHTTPS.isChecked()) {
+                            url = String.valueOf(metodoRadioHTTPS.getText());
+                        }
+                        url += urlEditText.getText().toString();
+                        if (url.charAt(url.length()-1) != '/') {
+                            url += "/";
+                        }
                         try {
                             new URL(url);
                         } catch (MalformedURLException malformedURLException) {
                             urlEditText.setError("URL non valido");
                             hasError = true;
                         }
+
                         String username = usernameEditText.getText().toString();
                         String password = passwordEditText.getText().toString();
                         if (password == null || "".equals(password)) {
@@ -128,7 +142,6 @@ public class SettingsActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                 LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                // TODO layout di info profilo
                 View layout = inflater.inflate(R.layout.dialog_info_profile, (ViewGroup) findViewById(R.id.content_layout));
                 // TODO textView
                 final TextView etichettaTextView = (TextView) layout.findViewById(R.id.dialog_info_profilo_etichetta);
