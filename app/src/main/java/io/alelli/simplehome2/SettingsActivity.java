@@ -91,7 +91,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                         String message;
                         if (!hasError) {
-                            Profilo profilo = new Profilo(context, etichetta, url, username, password);
+                            Profilo profilo = new Profilo(etichetta, url, username, password);
                             profiloDAO.insert(profilo);
                             mAdapter.add(profilo);
                             message = "Profilo aggiunto";

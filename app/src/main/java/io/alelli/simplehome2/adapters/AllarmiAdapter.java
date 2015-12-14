@@ -52,7 +52,7 @@ public class AllarmiAdapter extends BaseAdapter {
         convertView = LayoutInflater.from(context).inflate(R.layout.list_item_allarmi, parent, false);
 
         final SharedPreferences prefs = ((MainActivity) context).getPreferences(Context.MODE_PRIVATE);
-        ProfiloDAO profiloDAO = new ProfiloDAO(prefs);
+        ProfiloDAO profiloDAO = new ProfiloDAO(context, prefs);
         final Long idProfiloAttivo = profiloDAO.getIdProfileActive();
         Log.i(TAG, "getView: " + idProfiloAttivo);
         allarmeService = new Intent(context, AllarmeIntentService.class);
