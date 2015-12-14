@@ -1,10 +1,7 @@
 package io.alelli.simplehome2.models;
 
-import android.content.Context;
-
-import com.orm.SugarRecord;
-
-public class Profilo extends SugarRecord<Profilo> {
+public class Profilo {
+    private Long id;
     private String etichetta;
     private String url;
     private String username;
@@ -14,12 +11,20 @@ public class Profilo extends SugarRecord<Profilo> {
         super();
     }
 
-    public Profilo(Context context, String etichetta, String url, String username, String password) {
+    public Profilo(String etichetta, String url, String username, String password) {
         super();
         this.etichetta = etichetta;
         this.url = url;
         this.username = username;
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEtichetta() {

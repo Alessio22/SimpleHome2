@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         context = this;
 
         final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        profiloDAO = new ProfiloDAO(prefs);
+        profiloDAO = new ProfiloDAO(context, prefs);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
