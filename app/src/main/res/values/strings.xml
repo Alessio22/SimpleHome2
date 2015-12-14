@@ -17,6 +17,9 @@
     <string name="dialog_new_profile_title">Nuovo Profilo</string>
     <string name="dialog_new_profile_save">Salva</string>
     <string name="dialog_new_profile_close">Chiudi</string>
+    <string name="dialog_profilo_txt_metodo">Metodo:</string>
+    <string name="dialog_profilo_txt_metodo_http">HTTP://</string>
+    <string name="dialog_profilo_txt_metodo_https">HTTPS://</string>
     <string name="dialog_profilo_txt_etichetta">Etichetta:</string>
     <string name="dialog_profilo_txt_url">URL:</string>
     <string name="dialog_profilo_txt_username">Username:</string>

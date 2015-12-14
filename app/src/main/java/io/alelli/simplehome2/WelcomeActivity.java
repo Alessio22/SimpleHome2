@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,6 +33,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
     public void saveProfile(View fab) {
         final EditText etichettaEditText = (EditText) findViewById(R.id.dialog_profilo_etichetta);
+        final RadioButton metodoRadioHTTP = (RadioButton) findViewById(R.id.dialog_profilo_metodo_http);
+        final RadioButton metodoRadioHTTPS = (RadioButton) findViewById(R.id.dialog_profilo_metodo_https);
         final EditText urlEditText = (EditText) findViewById(R.id.dialog_profilo_url);
         final EditText usernameEditText = (EditText) findViewById(R.id.dialog_profilo_username);
         final EditText passwordEditText = (EditText) findViewById(R.id.dialog_profilo_password);
@@ -42,7 +45,17 @@ public class WelcomeActivity extends AppCompatActivity {
             etichettaEditText.setError("Etichetta obbligatoria");
             hasError = true;
         }
-        String url = urlEditText.getText().toString();
+
+        String url = "";
+        if (metodoRadioHTTP.isChecked()) {
+            url = String.valueOf(metodoRadioHTTP.getText());
+        } else if (metodoRadioHTTPS.isChecked()) {
+            url = String.valueOf(metodoRadioHTTPS.getText());
+        }
+        url += urlEditText.getText().toString();
+        if (url.charAt(url.length()-1) != '/') {
+            url += "/";
+        }
         try {
             new URL(url);
         } catch (MalformedURLException malformedURLException) {
@@ -57,7 +70,7 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         if(!hasError) {
-            Profilo profilo = new Profilo(context, etichetta, url, username, password);
+            Profilo profilo = new Profilo(etichetta, url, username, password);
             profiloDAO.insert(profilo);
 
             final Intent intent = new Intent(context, MainActivity.class);

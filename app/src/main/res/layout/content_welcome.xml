@@ -29,6 +29,27 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/dialog_profilo_txt_metodo"
+        android:id="@+id/dialog_profilo_txt_metodo"
+        android:textStyle="bold" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_profilo_txt_metodo_http"
+        android:id="@+id/dialog_profilo_metodo_http"
+        android:checked="true" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_profilo_txt_metodo_https"
+        android:id="@+id/dialog_profilo_metodo_https"
+        android:checked="false" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/dialog_profilo_txt_url"
         android:id="@+id/dialog_profilo_txt_url"
         android:textStyle="bold" />

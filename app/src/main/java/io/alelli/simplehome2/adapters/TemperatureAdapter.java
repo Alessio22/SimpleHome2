@@ -55,7 +55,7 @@ public class TemperatureAdapter extends BaseAdapter {
         convertView = LayoutInflater.from(context).inflate(R.layout.list_item_temperature, parent, false);
 
         final SharedPreferences prefs = ((MainActivity) context).getPreferences(Context.MODE_PRIVATE);
-        ProfiloDAO profiloDAO = new ProfiloDAO(prefs);
+        ProfiloDAO profiloDAO = new ProfiloDAO(context, prefs);
         final Long idProfiloAttivo = profiloDAO.getIdProfileActive();
         temperatureService = new Intent(context, TemperatureIntentService.class);
 

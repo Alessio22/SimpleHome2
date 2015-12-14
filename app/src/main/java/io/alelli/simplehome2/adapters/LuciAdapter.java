@@ -52,7 +52,7 @@ public class LuciAdapter extends BaseAdapter {
         convertView = LayoutInflater.from(context).inflate(R.layout.list_item_luci, parent, false);
 
         final SharedPreferences prefs = ((MainActivity) context).getPreferences(Context.MODE_PRIVATE);
-        ProfiloDAO profiloDAO = new ProfiloDAO(prefs);
+        ProfiloDAO profiloDAO = new ProfiloDAO(context, prefs);
         final Long idProfiloAttivo = profiloDAO.getIdProfileActive();
         luciService = new Intent(context, LuciIntentService.class);
 
