@@ -13,6 +13,9 @@
     <string name="title_activity_settings">Impostazioni</string>
     <string name="info_nav">Informazioni</string>
     <string name="info_title_fragment">Informazioni</string>
+    <string name="interruzioni_nav">Zone filo aperte</string>
+    <string name="interruzioni_title_fragment">Zone filo aperte</string>
+
 
     <string name="dialog_new_profile_title">Nuovo Profilo</string>
     <string name="dialog_new_profile_save">Salva</string>

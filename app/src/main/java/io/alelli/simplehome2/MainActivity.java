@@ -110,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem allarme = new PrimaryDrawerItem().withSelectable(false)
                 .withName(R.string.allarme_nav)
                 .withIcon(R.drawable.ic_security_black_24px);
+        PrimaryDrawerItem interruzioni = new PrimaryDrawerItem().withSelectable(false)
+                .withName(R.string.interruzioni_nav)
+                .withIcon(R.drawable.ic_dnd_forwardslash_24dp);
         SecondaryDrawerItem settings = new SecondaryDrawerItem()
                 .withName(R.string.settings_nav).withTextColorRes(R.color.secondary_text)
                 .withIcon(R.drawable.ic_settings_24dp);
@@ -121,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
-                .addDrawerItems(home, luci, temperature, allarme, new DividerDrawerItem(), settings, about)
+                .addDrawerItems(home, luci, temperature, allarme, interruzioni, new DividerDrawerItem(), settings, about)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -138,11 +141,14 @@ public class MainActivity extends AppCompatActivity {
                             case 4:
                                 openFragment(new AllarmeFragment(), getString(R.string.allarme_title_fragment));
                                 break;
-                            case 6:
+                            case 5:
+                                openFragment(new InterruzioniFragment(), getString(R.string.interruzioni_title_fragment));
+                                break;
+                            case 7:
                                 final Intent intent = new Intent(context, SettingsActivity.class);
                                 startActivity(intent);
                                 break;
-                            case 7:
+                            case 6:
                                 openFragment(new InfoFragment(), getString(R.string.info_title_fragment));
                                 break;
                         }

@@ -47,6 +47,15 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        Button btnInterruzioni = (Button) view.findViewById(R.id.button_interruzioni);
+        btnInterruzioni.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new InterruzioniFragment();
+                openFragment(fragment);
+            }
+        });
+
         Button btnSettings = (Button) view.findViewById(R.id.button_settings);
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override

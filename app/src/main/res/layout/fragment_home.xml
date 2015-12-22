@@ -29,6 +29,13 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/interruzioni_nav"
+        android:id="@+id/button_interruzioni"
+        android:backgroundTint="@color/accent" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/settings_nav"
         android:id="@+id/button_settings"
         android:backgroundTint="@color/accent" />
