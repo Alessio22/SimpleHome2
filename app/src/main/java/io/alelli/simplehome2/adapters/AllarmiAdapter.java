@@ -54,7 +54,7 @@ public class AllarmiAdapter extends BaseAdapter {
         final SharedPreferences prefs = ((MainActivity) context).getPreferences(Context.MODE_PRIVATE);
         ProfiloDAO profiloDAO = new ProfiloDAO(context, prefs);
         final Long idProfiloAttivo = profiloDAO.getIdProfileActive();
-        Log.i(TAG, "getView: " + idProfiloAttivo);
+        Log.d(TAG, "getView: " + idProfiloAttivo);
         allarmeService = new Intent(context, AllarmeIntentService.class);
 
         Switch switchStato = (Switch) convertView.findViewById(R.id.switch_stato);

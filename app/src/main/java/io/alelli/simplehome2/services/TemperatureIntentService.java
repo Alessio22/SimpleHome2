@@ -49,12 +49,12 @@ public class TemperatureIntentService extends IntentService {
 
     public TemperatureIntentService() {
         super("TemperatureIntentService");
-        Log.i(TAG, "TemperatureIntentService()");
+        Log.d(TAG, "TemperatureIntentService()");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i(TAG, "onHandleIntent");
+        Log.d(TAG, "onHandleIntent");
 
         final String action = intent.getAction();
         Log.d(TAG, "action: " + action);
@@ -131,7 +131,7 @@ public class TemperatureIntentService extends IntentService {
     }
 
     private boolean changeTemperatura(Integer command, Integer id) throws Exception {
-        Log.i(TAG, "changeTemperatura id: " + id + " command: " + 1);
+        Log.d(TAG, "changeTemperatura id: " + id + " command: " + 1);
         boolean result = false;
         HttpURLConnection httpURLConnection = null;
         try {
@@ -152,7 +152,7 @@ public class TemperatureIntentService extends IntentService {
     }
 
     private String tempDesc() throws XmlPullParserException, IOException {
-        Log.i(TAG, "tempDesc");
+        Log.d(TAG, "tempDesc");
         String json = "";
         HttpURLConnection httpURLConnection = null;
         try {

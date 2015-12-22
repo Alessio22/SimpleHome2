@@ -52,7 +52,7 @@ public class AllarmeIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i(TAG, "onHandleIntent");
+        Log.d(TAG, "onHandleIntent");
 
         final String action = intent.getAction();
         Log.d(TAG, "action: " + action);
@@ -64,7 +64,7 @@ public class AllarmeIntentService extends IntentService {
 
         ProfiloDAO dao = new ProfiloDAO(getBaseContext());
         Profilo profilo = dao.findById(idProfiloAttivo);
-        Log.i(TAG, "getView: " + idProfiloAttivo);
+        Log.d(TAG, "getView: " + idProfiloAttivo);
 
         API = profilo.getUrl();
         USERNAME = profilo.getUsername();
@@ -114,7 +114,7 @@ public class AllarmeIntentService extends IntentService {
     }
 
     private String allarmi() throws Exception {
-        Log.i(TAG, "allarmi");
+        Log.d(TAG, "allarmi");
         String json = "";
         HttpURLConnection httpURLConnection = null;
         try {
@@ -211,11 +211,11 @@ public class AllarmeIntentService extends IntentService {
     }
 
     private boolean changeStatoAllarme(String id) throws Exception {
-        Log.i(TAG, "changeStatoAllarme id: " + id);
+        Log.d(TAG, "changeStatoAllarme id: " + id);
         boolean result = false;
         HttpURLConnection httpURLConnection = null;
         try {
-            Log.i(TAG, "changeStatoAllarme: "+ API + "user/statoAree.cgi?statoArea="+id);
+            Log.d(TAG, "changeStatoAllarme: "+ API + "user/statoAree.cgi?statoArea="+id);
             URL url = new URL(API + "user/statoAree.cgi?statoArea="+id);
             httpURLConnection = (HttpURLConnection) url.openConnection();
             String userCredentials = USERNAME+":"+PASSWORD;

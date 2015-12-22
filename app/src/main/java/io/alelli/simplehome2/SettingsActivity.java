@@ -71,7 +71,7 @@ public class SettingsActivity extends AppCompatActivity {
                 builder.setTitle(R.string.dialog_new_profile_title);
                 builder.setPositiveButton(R.string.dialog_new_profile_save, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Log.i(TAG, "Dialog Ok");
+                        Log.d(TAG, "Dialog Ok");
                         Boolean hasError = false;
                         String etichetta = etichettaEditText.getText().toString();
                         if (etichetta == null || "".equals(etichetta)) {
@@ -119,7 +119,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 builder.setNegativeButton(R.string.dialog_new_profile_close, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Log.i(TAG, "Dialog close");
+                        Log.d(TAG, "Dialog close");
                     }
                 });
 
@@ -131,7 +131,7 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         List<Profilo> profili = profiloDAO.findAll();
-        Log.i(TAG, "size profile: " + profili.size());
+        Log.d(TAG, "size profile: " + profili.size());
         mAdapter.addAll(profili);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

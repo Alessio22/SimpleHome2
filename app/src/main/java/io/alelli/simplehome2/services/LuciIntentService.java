@@ -48,12 +48,12 @@ public class LuciIntentService extends IntentService {
 
     public LuciIntentService() {
         super("LuciIntentService");
-        Log.i(TAG, "LuciIntentService()");
+        Log.d(TAG, "LuciIntentService()");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i(TAG, "onHandleIntent");
+        Log.d(TAG, "onHandleIntent");
 
         final String action = intent.getAction();
         Log.d(TAG, "action: " + action);
@@ -114,7 +114,7 @@ public class LuciIntentService extends IntentService {
     }
 
     private String luciDesc() throws Exception {
-        Log.i(TAG, "luciDesc");
+        Log.d(TAG, "luciDesc");
         String json = "";
         HttpURLConnection httpURLConnection = null;
         try {
@@ -199,7 +199,7 @@ public class LuciIntentService extends IntentService {
     }
 
     private boolean changeStatoLuci(Integer id) throws Exception {
-        Log.i(TAG, "changeStatoLuci id: " + id);
+        Log.d(TAG, "changeStatoLuci id: " + id);
         boolean result = false;
         HttpURLConnection httpURLConnection = null;
         try {

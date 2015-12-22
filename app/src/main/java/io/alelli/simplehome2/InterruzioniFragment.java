@@ -21,33 +21,34 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import io.alelli.simplehome2.adapters.AllarmiAdapter;
+import io.alelli.simplehome2.adapters.InterruzioniAdapter;
 import io.alelli.simplehome2.dao.ProfiloDAO;
-import io.alelli.simplehome2.models.Allarme;
-import io.alelli.simplehome2.services.AllarmeIntentService;
+import io.alelli.simplehome2.models.Interruzione;
+import io.alelli.simplehome2.services.InterruzioniIntentService;
 
-public class AllarmeFragment extends Fragment {
-    private static final String TAG = "AllarmeFragment";
+public class InterruzioniFragment extends Fragment {
+    private static final String TAG = "InterruzioniFragment";
     private static Context context;
-    private Intent allarmeService;
+    private Intent interruzioniService;
     private Long idProfiloAttivo;
 
     private AbsListView mListView;
-    private AllarmiAdapter mAdapter;
+    private InterruzioniAdapter mAdapter;
     private SwipeRefreshLayout swipeContainer;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "onReceive");
+            Log.d(TAG, intent.getAction());
 
-            if(AllarmeIntentService.BROADCAST_LIST.equals(intent.getAction())) {
-                String errore = intent.getStringExtra(AllarmeIntentService.EXTRA_ERROR);
+            if(InterruzioniIntentService.BROADCAST_LIST.equals(intent.getAction())) {
+                String errore = intent.getStringExtra(InterruzioniIntentService.EXTRA_ERROR);
                 Log.d(TAG, "onReceive: " + errore);
                 if(errore == null) {
-                    String json = intent.getStringExtra(AllarmeIntentService.EXTRA_LIST);
-                    Type listType = new TypeToken<ArrayList<Allarme>>() {}.getType();
-                    ArrayList<Allarme> listaAllarmi = new Gson().fromJson(json, listType);
-                    mAdapter.addAll(listaAllarmi);
+                    String json = intent.getStringExtra(InterruzioniIntentService.EXTRA_LIST);
+                    Type listType = new TypeToken<ArrayList<Interruzione>>() {}.getType();
+                    ArrayList<Interruzione> interruzioniList = new Gson().fromJson(json, listType);
+                    mAdapter.addAll(interruzioniList);
 
                     String message = "Aggiornamento completato";
                     if(getView() != null) {
@@ -59,28 +60,6 @@ public class AllarmeFragment extends Fragment {
                         Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
                     }
                 }
-            }
-
-            if(AllarmeIntentService.BROADCAST_CHANGE.equals(intent.getAction())) {
-                String errore = intent.getStringExtra(AllarmeIntentService.EXTRA_ERROR);
-                if(errore == null) {
-                    boolean result = intent.getBooleanExtra(AllarmeIntentService.EXTRA_CHANGE_RESULT, false);
-                    String stato = intent.getStringExtra(AllarmeIntentService.EXTRA_STATO);
-                    String nome = intent.getStringExtra(AllarmeIntentService.EXTRA_NOME);
-
-                    String message = getString(R.string.errore_change_stato_luci);
-                    if (result) {
-                        message = "Allarme " + nome + " " + stato;
-                    }
-                    if(getView() != null) {
-                        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
-                    }
-                } else {
-                    if(getView() != null) {
-                        Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
-                    }
-                }
-                context.startService(allarmeService);
             }
 
         }
@@ -97,16 +76,15 @@ public class AllarmeFragment extends Fragment {
         idProfiloAttivo = profiloDAO.getIdProfileActive();
         Log.d(TAG, "onCreate: " + idProfiloAttivo);
 
-        mAdapter = new AllarmiAdapter(context);
+        mAdapter = new InterruzioniAdapter(context);
 
-        allarmeService = new Intent(context, AllarmeIntentService.class);
-        allarmeService.setAction(AllarmeIntentService.ACTION_LIST);
-        allarmeService.putExtra(AllarmeIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
-        context.startService(allarmeService);
+        interruzioniService = new Intent(context, InterruzioniIntentService.class);
+        interruzioniService.setAction(InterruzioniIntentService.ACTION_LIST);
+        interruzioniService.putExtra(InterruzioniIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
+        context.startService(interruzioniService);
 
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(AllarmeIntentService.BROADCAST_LIST);
-        intentFilter.addAction(AllarmeIntentService.BROADCAST_CHANGE);
+        intentFilter.addAction(InterruzioniIntentService.BROADCAST_LIST);
         context.registerReceiver(receiver, intentFilter);
     }
 
@@ -114,7 +92,7 @@ public class AllarmeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        View view = inflater.inflate(R.layout.fragment_allarme_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_interruzioni_list, container, false);
 
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
@@ -123,9 +101,9 @@ public class AllarmeFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                allarmeService.setAction(AllarmeIntentService.ACTION_LIST);
-                allarmeService.putExtra(AllarmeIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
-                context.startService(allarmeService);
+                interruzioniService.setAction(InterruzioniIntentService.ACTION_LIST);
+                interruzioniService.putExtra(InterruzioniIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
+                context.startService(interruzioniService);
             }
         });
         swipeContainer.setColorSchemeResources(R.color.primary);
@@ -140,4 +118,5 @@ public class AllarmeFragment extends Fragment {
         super.onDetach();
         context.unregisterReceiver(receiver);
     }
+
 }
