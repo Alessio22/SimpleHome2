@@ -38,8 +38,8 @@ public class InterruzioniFragment extends Fragment {
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "onReceive");
-            Log.i(TAG, intent.getAction());
+            Log.d(TAG, "onReceive");
+            Log.d(TAG, intent.getAction());
 
             if(InterruzioniIntentService.BROADCAST_LIST.equals(intent.getAction())) {
                 String errore = intent.getStringExtra(InterruzioniIntentService.EXTRA_ERROR);
@@ -67,14 +67,14 @@ public class InterruzioniFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate");
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
         context = getContext();
         final SharedPreferences prefs = this.getActivity().getPreferences(Context.MODE_PRIVATE);
         ProfiloDAO profiloDAO = new ProfiloDAO(context, prefs);
         idProfiloAttivo = profiloDAO.getIdProfileActive();
-        Log.i(TAG, "onCreate: " + idProfiloAttivo);
+        Log.d(TAG, "onCreate: " + idProfiloAttivo);
 
         mAdapter = new InterruzioniAdapter(context);
 
@@ -91,7 +91,7 @@ public class InterruzioniFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView");
+        Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_interruzioni_list, container, false);
 
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -114,7 +114,7 @@ public class InterruzioniFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        Log.i(TAG, "onDetach");
+        Log.d(TAG, "onDetach");
         super.onDetach();
         context.unregisterReceiver(receiver);
     }

@@ -103,7 +103,7 @@ public class ProfiloDAO extends SQLiteOpenHelper {
             cv.put(TABLE_PROFILO_USERNAME, profilo.getUsername());
             cv.put(TABLE_PROFILO_PASSWORD, profilo.getPassword());
             Long result = db.insert(TABLE_PROFILO, TABLE_PROFILO_ID, cv);
-            Log.i(TAG, "result: " + result);
+            Log.d(TAG, "result: " + result);
             db.close();
         } catch (Exception e) {
             return false;

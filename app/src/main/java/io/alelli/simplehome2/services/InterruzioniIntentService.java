@@ -45,12 +45,12 @@ public class InterruzioniIntentService extends IntentService {
 
     public InterruzioniIntentService() {
         super("InterruzioniIntentService");
-        Log.i(TAG, "InterruzioniIntentService()");
+        Log.d(TAG, "InterruzioniIntentService()");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i(TAG, "onHandleIntent");
+        Log.d(TAG, "onHandleIntent");
 
         final String action = intent.getAction();
         Log.d(TAG, "action: " + action);
@@ -87,7 +87,7 @@ public class InterruzioniIntentService extends IntentService {
     }
 
     private String interruzioniDesc() throws Exception {
-        Log.i(TAG, "interruzioniDesc");
+        Log.d(TAG, "interruzioniDesc");
         String json = "";
         HttpURLConnection httpURLConnection = null;
         try {
@@ -119,7 +119,7 @@ public class InterruzioniIntentService extends IntentService {
     }
     // TODO da aggiustare
     private ArrayList<Interruzione> readDescInterruzioni(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Log.i(TAG, "Interruzione");
+        Log.d(TAG, "Interruzione");
         ArrayList<Interruzione> interruzioni = new ArrayList();
 
         parser.require(XmlPullParser.START_TAG, ns, "response");

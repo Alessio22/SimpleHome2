@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         Long idProfiloAttivo = profiloDAO.getIdProfileActive();
-        Log.i(TAG, "idProfiloAttivo: " + idProfiloAttivo);
         headerResult.setActiveProfile(idProfiloAttivo.intValue());;
 
         //if you want to update the items at a later time it is recommended to keep it in a variable

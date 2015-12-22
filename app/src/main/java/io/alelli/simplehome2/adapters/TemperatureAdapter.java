@@ -71,7 +71,7 @@ public class TemperatureAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Integer id = position;
-                Log.i(TAG, "onClick btnUp: " + id);
+                Log.d(TAG, "onClick btnUp: " + id);
                 String nomeLuce = (String) descrizione.getText();
 
                 temperatureService.setAction(TemperatureIntentService.ACTION_UP);
@@ -87,7 +87,7 @@ public class TemperatureAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Long id = getItemId(position);
-                Log.i(TAG, "onClick btnDown: " + id);
+                Log.d(TAG, "onClick btnDown: " + id);
                 String nomeLuce = (String) descrizione.getText();
 
                 temperatureService.setAction(TemperatureIntentService.ACTION_DOWN);

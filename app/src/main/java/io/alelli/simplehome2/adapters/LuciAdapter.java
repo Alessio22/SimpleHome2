@@ -67,7 +67,7 @@ public class LuciAdapter extends BaseAdapter {
                 Switch switchStato = (Switch) buttonView;
                 Integer idLuce = (Integer) switchStato.getTag();
                 String nomeLuce = (String) switchStato.getText();
-                Log.i(TAG, "idLuce: " + (isChecked ? "ON" : "OFF"));
+                Log.d(TAG, "idLuce: " + (isChecked ? "ON" : "OFF"));
 
                 luciService.setAction(LuciIntentService.ACTION_CHANGE);
                 luciService.putExtra(LuciIntentService.EXTRA_ID_PROFILO, idProfiloAttivo);
