@@ -172,6 +172,7 @@ public class TemperatureFragment extends Fragment {
     public void onDetach() {
         Log.d(TAG, "onDetach");
         super.onDetach();
+        context.stopService(temperatureService);
         context.unregisterReceiver(receiver);
     }
 }

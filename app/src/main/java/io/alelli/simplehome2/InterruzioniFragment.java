@@ -116,6 +116,7 @@ public class InterruzioniFragment extends Fragment {
     public void onDetach() {
         Log.d(TAG, "onDetach");
         super.onDetach();
+        context.stopService(interruzioniService);
         context.unregisterReceiver(receiver);
     }
 
