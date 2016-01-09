@@ -80,7 +80,7 @@ public class AllarmeFragment extends Fragment {
                         Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
                     }
                 }
-                context.startService(allarmeService);
+                //context.startService(allarmeService);
             }
 
         }
@@ -111,6 +111,18 @@ public class AllarmeFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        Log.d(TAG, "onResume");
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "onPause");
+        super.onPause();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
@@ -138,6 +150,7 @@ public class AllarmeFragment extends Fragment {
     public void onDetach() {
         Log.d(TAG, "onDetach");
         super.onDetach();
+        context.stopService(allarmeService);
         context.unregisterReceiver(receiver);
     }
 }
