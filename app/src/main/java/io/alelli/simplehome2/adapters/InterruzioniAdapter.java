@@ -2,6 +2,7 @@ package io.alelli.simplehome2.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,14 @@ public class InterruzioniAdapter extends BaseAdapter {
 
     public void addAll(ArrayList<Interruzione> interruzioni) {
         interruzioniList.clear();
-        interruzioniList.addAll(interruzioni);
+        if(interruzioni != null) {
+            for (Interruzione interruzione : interruzioni) {
+                if(interruzione.isOpen()) {
+                    interruzioniList.add(interruzione);
+                }
+            }
+        }
+        // interruzioniList.addAll(interruzioni);
         notifyDataSetChanged();
     }
 

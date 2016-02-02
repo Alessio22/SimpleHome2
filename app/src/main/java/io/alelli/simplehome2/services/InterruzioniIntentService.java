@@ -79,6 +79,7 @@ public class InterruzioniIntentService extends IntentService {
                 } catch (Exception e){
                     Log.e(TAG, "onHandleIntent: Exception: " + getString(R.string.errore_generico));
                     intentBroadcastList.putExtra(EXTRA_ERROR, getString(R.string.errore_generico));
+                    e.printStackTrace();
                 }
                 intentBroadcastList.putExtra(EXTRA_LIST, jsonList);
                 sendBroadcast(intentBroadcastList);
@@ -130,23 +131,26 @@ public class InterruzioniIntentService extends IntentService {
             String name = parser.getName();
             if (name.startsWith("descF")) {
                 Integer id = Integer.parseInt( name.substring(5) );
-                String desc = null;
                 if (parser.next() == XmlPullParser.TEXT) {
-                    desc = parser.getText();
+                    int i = 0;
+                    boolean bool = true;
+                    while (bool && i < interruzioni.size()) {
+                        if(interruzioni.get(i).getId() == id) {
+                            interruzioni.get(i).setNome(parser.getText());
+                            bool = false;
+                        }
+                        i++;
+                    }
                     parser.nextTag();
-                }
-                if(desc != null) {
-                    interruzioni.add(new Interruzione(id, desc));
                 }
             } else if(name.startsWith("inF")) {
                 Integer id = Integer.parseInt( name.substring(3) );
-                boolean stato = false;
                 if (parser.next() == XmlPullParser.TEXT) {
-                    stato = !"0".equals(parser.getText());
+                    Interruzione interruzione = new Interruzione();
+                    interruzione.setId(id);
+                    interruzione.setOpen("1".equals(parser.getText()));
+                    interruzioni.add(interruzione);
                     parser.nextTag();
-                }
-                if(!stato) {
-                    interruzioni.remove(id);
                 }
             } else {
                 skip(parser);
