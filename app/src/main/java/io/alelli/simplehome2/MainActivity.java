@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -106,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem temperature = new PrimaryDrawerItem()
                 .withName(R.string.temperature_nav)
                 .withIcon(R.drawable.ic_ac_unit_black_24px);
-        PrimaryDrawerItem allarme = new PrimaryDrawerItem().withSelectable(false)
+        PrimaryDrawerItem allarme = new PrimaryDrawerItem()
                 .withName(R.string.allarme_nav)
                 .withIcon(R.drawable.ic_security_black_24px);
-        PrimaryDrawerItem interruzioni = new PrimaryDrawerItem().withSelectable(false)
+        PrimaryDrawerItem interruzioni = new PrimaryDrawerItem()
                 .withName(R.string.interruzioni_nav)
                 .withIcon(R.drawable.ic_dnd_forwardslash_24dp);
         SecondaryDrawerItem settings = new SecondaryDrawerItem()
@@ -147,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                                 final Intent intent = new Intent(context, SettingsActivity.class);
                                 startActivity(intent);
                                 break;
-                            case 6:
+                            case 8:
                                 openFragment(new InfoFragment(), getString(R.string.info_title_fragment));
                                 break;
                         }
