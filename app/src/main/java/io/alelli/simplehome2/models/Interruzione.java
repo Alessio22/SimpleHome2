@@ -3,6 +3,9 @@ package io.alelli.simplehome2.models;
 public class Interruzione {
     private Integer id;
     private String nome;
+    private boolean open;
+
+    public Interruzione() {}
 
     public Interruzione(Integer id, String nome) {
         this.id = id;
@@ -25,4 +28,11 @@ public class Interruzione {
         this.nome = nome;
     }
 
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
 }

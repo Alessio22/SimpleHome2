@@ -61,7 +61,6 @@ public class InterruzioniFragment extends Fragment {
                     }
                 }
             }
-
         }
     };
 
