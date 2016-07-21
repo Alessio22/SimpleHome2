@@ -48,4 +48,9 @@
     <string name="logo">logo</string>
     <string name="allarme_disattivato">disattivato</string>
     <string name="allarme_attivato">attivato</string>
+
+    <string name="cam_nav">Videosorveglianza</string>
+    <string name="cam_title_fragment">Videosorveglianza</string>
+    <string name="camPicAlt">Camera picture</string>
+
 </resources>
