@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -52,12 +51,12 @@ public class InterruzioniFragment extends Fragment {
 
                     String message = "Aggiornamento completato";
                     if(getView() != null) {
-                        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                        //Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
                     }
                     swipeContainer.setRefreshing(false);
                 } else {
                     if(getView() != null) {
-                        Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
+                        //Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
                     }
                 }
             }
