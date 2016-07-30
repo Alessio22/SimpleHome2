@@ -1,6 +1,5 @@
 package io.alelli.simplehome2;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -44,38 +43,6 @@ public class CamFragment extends Fragment {
     private Timer timer = new Timer();
     private ImageView camPic;
 
-
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive");
-            Log.d(TAG, intent.getAction());
-
-            if(LuciIntentService.BROADCAST_CHANGE.equals(intent.getAction())) {
-                String errore = intent.getStringExtra(LuciIntentService.EXTRA_ERROR);
-                if(errore == null) {
-                    boolean result = intent.getBooleanExtra(LuciIntentService.EXTRA_CHANGE_RESULT, false);
-                    String stato = intent.getStringExtra(LuciIntentService.EXTRA_STATO);
-                    String nome = intent.getStringExtra(LuciIntentService.EXTRA_NOME);
-
-                    String message = getString(R.string.errore_change_stato_luci);
-                    if (result) {
-                        message = "Luce " + nome + " " + stato;
-                    }
-                    if(getView() != null) {
-                        //Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
-                    }
-                } else {
-                    if(getView() != null) {
-                        //Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
-                    }
-                }
-            }
-            context.stopService(luciService);
-
-        }
-    };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -94,7 +61,6 @@ public class CamFragment extends Fragment {
         Log.d(TAG, "url: " + url);
 
         intentFilterReceiver.addAction(LuciIntentService.BROADCAST_CHANGE);
-        context.registerReceiver(receiver, intentFilterReceiver);
     }
 
     @Override
@@ -128,7 +94,6 @@ public class CamFragment extends Fragment {
     public void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
-        context.registerReceiver(receiver, intentFilterReceiver);
         callAsynchronousTask();
     }
 
@@ -136,7 +101,6 @@ public class CamFragment extends Fragment {
     public void onPause() {
         Log.d(TAG, "onPause");
         super.onPause();
-        context.unregisterReceiver(receiver);
         timer.cancel();
     }
 
@@ -144,7 +108,6 @@ public class CamFragment extends Fragment {
     public void onDetach() {
         Log.d(TAG, "onDetach");
         super.onDetach();
-        context.unregisterReceiver(receiver);
         timer.cancel();
     }
 
