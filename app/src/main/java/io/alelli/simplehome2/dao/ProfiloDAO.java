@@ -14,6 +14,7 @@ import io.alelli.simplehome2.models.Profilo;
 
 public class ProfiloDAO extends SQLiteOpenHelper {
     private static final String TAG = "ProfiloDAO";
+    private static final int version = 2;
 
     public static final String ACTIVE_PROFILE = "active.profile";
     private SharedPreferences prefs;
@@ -25,24 +26,30 @@ public class ProfiloDAO extends SQLiteOpenHelper {
     static final String TABLE_PROFILO_URL="url";
     static final String TABLE_PROFILO_USERNAME="username";
     static final String TABLE_PROFILO_PASSWORD="password";
+    static final String TABLE_PROFILO_URL_CAM="urlCam";
+    static final String TABLE_PROFILO_USERNAME_CAM="usernameCam";
+    static final String TABLE_PROFILO_PASSWORD_CAM="passwordCam";
 
     final static String[] COLUMNS = {
             TABLE_PROFILO_ID,
             TABLE_PROFILO_ETICHETTA,
             TABLE_PROFILO_URL,
             TABLE_PROFILO_USERNAME,
-            TABLE_PROFILO_PASSWORD
+            TABLE_PROFILO_PASSWORD,
+            TABLE_PROFILO_URL_CAM,
+            TABLE_PROFILO_USERNAME_CAM,
+            TABLE_PROFILO_PASSWORD_CAM
     };
 
     private Context context;
 
     public ProfiloDAO(Context context) {
-        super(context, DBNAME, null, 1);
+        super(context, DBNAME, null, version);
         this.context = context;
     }
 
     public ProfiloDAO(Context context, SharedPreferences prefs) {
-        super(context, DBNAME, null, 1);
+        super(context, DBNAME, null, version);
         this.context = context;
         this.prefs = prefs;
     }
@@ -60,8 +67,17 @@ public class ProfiloDAO extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_PROFILO);
-        onCreate(db);
+        if(oldVersion == 1 && newVersion == 2) {
+            db.execSQL("ALTER TABLE " + TABLE_PROFILO + " ADD " +
+                TABLE_PROFILO_URL_CAM + " TEXT");
+            db.execSQL("ALTER TABLE " + TABLE_PROFILO + " ADD " +
+                    TABLE_PROFILO_USERNAME_CAM + " TEXT");
+            db.execSQL("ALTER TABLE " + TABLE_PROFILO + " ADD " +
+                    TABLE_PROFILO_PASSWORD_CAM + " TEXT");
+        }else {
+            db.execSQL("DROP TABLE IF EXISTS "+TABLE_PROFILO);
+            onCreate(db);
+        }
     }
 
     public ArrayList<Profilo> findAll() {
@@ -74,6 +90,9 @@ public class ProfiloDAO extends SQLiteOpenHelper {
             profilo.setUrl(cur.getString(cur.getColumnIndex(TABLE_PROFILO_URL)));
             profilo.setUsername(cur.getString(cur.getColumnIndex(TABLE_PROFILO_USERNAME)));
             profilo.setPassword(cur.getString(cur.getColumnIndex(TABLE_PROFILO_PASSWORD)));
+            profilo.setUrlCam(cur.getString(cur.getColumnIndex(TABLE_PROFILO_URL_CAM)));
+            profilo.setUsernameCam(cur.getString(cur.getColumnIndex(TABLE_PROFILO_USERNAME_CAM)));
+            profilo.setPasswordCam(cur.getString(cur.getColumnIndex(TABLE_PROFILO_PASSWORD_CAM)));
             profili.add(profilo);
         }
         return profili;
@@ -89,6 +108,9 @@ public class ProfiloDAO extends SQLiteOpenHelper {
             profilo.setUrl(cur.getString(cur.getColumnIndex(TABLE_PROFILO_URL)));
             profilo.setUsername(cur.getString(cur.getColumnIndex(TABLE_PROFILO_USERNAME)));
             profilo.setPassword(cur.getString(cur.getColumnIndex(TABLE_PROFILO_PASSWORD)));
+            profilo.setUrlCam(cur.getString(cur.getColumnIndex(TABLE_PROFILO_URL_CAM)));
+            profilo.setUsernameCam(cur.getString(cur.getColumnIndex(TABLE_PROFILO_USERNAME_CAM)));
+            profilo.setPasswordCam(cur.getString(cur.getColumnIndex(TABLE_PROFILO_PASSWORD_CAM)));
         }
         return profilo;
     }
@@ -102,6 +124,9 @@ public class ProfiloDAO extends SQLiteOpenHelper {
             cv.put(TABLE_PROFILO_URL, profilo.getUrl());
             cv.put(TABLE_PROFILO_USERNAME, profilo.getUsername());
             cv.put(TABLE_PROFILO_PASSWORD, profilo.getPassword());
+            cv.put(TABLE_PROFILO_URL_CAM, profilo.getUrlCam());
+            cv.put(TABLE_PROFILO_USERNAME_CAM, profilo.getUsernameCam());
+            cv.put(TABLE_PROFILO_PASSWORD_CAM, profilo.getPasswordCam());
             Long result = db.insert(TABLE_PROFILO, TABLE_PROFILO_ID, cv);
             Log.d(TAG, "result: " + result);
             db.close();

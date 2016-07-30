@@ -28,15 +28,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.alelli.simplehome2.dao.ProfiloDAO;
+import io.alelli.simplehome2.models.Profilo;
 import io.alelli.simplehome2.services.LuciIntentService;
 
 public class CamFragment extends Fragment {
     private static final String TAG = "CamFragment";
     private static Context context;
+    private IntentFilter intentFilterReceiver = new IntentFilter();
     private Intent luciService;
     private Long idProfiloAttivo;
 
-    private final String url = "http://192.168.0.201:88/cam_pic.php";
+    private String url;
+    private String userCredentials;
     private final Integer delay = 100;
     private Timer timer = new Timer();
     private ImageView camPic;
@@ -82,11 +85,16 @@ public class CamFragment extends Fragment {
         final SharedPreferences prefs = this.getActivity().getPreferences(Context.MODE_PRIVATE);
         ProfiloDAO profiloDAO = new ProfiloDAO(context, prefs);
         idProfiloAttivo = profiloDAO.getIdProfileActive();
-        Log.d(TAG, "onCreate: " + idProfiloAttivo);
+        Log.d(TAG, "idProfiloAttivo: " + idProfiloAttivo);
 
-        final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(LuciIntentService.BROADCAST_CHANGE);
-        context.registerReceiver(receiver, intentFilter);
+        Profilo profilo = profiloDAO.findById(idProfiloAttivo);
+        userCredentials = profilo.getUsernameCam()+":"+profilo.getPasswordCam();
+        Log.d(TAG, "userCredentials: " + userCredentials);
+        url = profilo.getUrlCam();
+        Log.d(TAG, "url: " + url);
+
+        intentFilterReceiver.addAction(LuciIntentService.BROADCAST_CHANGE);
+        context.registerReceiver(receiver, intentFilterReceiver);
     }
 
     @Override
@@ -99,7 +107,7 @@ public class CamFragment extends Fragment {
             @Override
             public void onClick(final View view) {
                 Integer idLuce = 1;
-                String nomeLuce = "Soggiorno";
+                String nomeLuce = "";
                 Log.d(TAG, "idLuce: " + idLuce + "toggle");
 
                 luciService = new Intent(context, LuciIntentService.class);
@@ -108,11 +116,10 @@ public class CamFragment extends Fragment {
                 luciService.putExtra(LuciIntentService.EXTRA_ID, idLuce);
                 luciService.putExtra(LuciIntentService.EXTRA_NOME, nomeLuce);
 
-                luciService.putExtra(LuciIntentService.EXTRA_STATO, "Luce soggiorno Toggle");
+                luciService.putExtra(LuciIntentService.EXTRA_STATO, "");
                 context.startService(luciService);
             }
         });
-
 
         return view;
     }
@@ -121,6 +128,7 @@ public class CamFragment extends Fragment {
     public void onResume() {
         Log.d(TAG, "onResume");
         super.onResume();
+        context.registerReceiver(receiver, intentFilterReceiver);
         callAsynchronousTask();
     }
 
@@ -128,11 +136,13 @@ public class CamFragment extends Fragment {
     public void onPause() {
         Log.d(TAG, "onPause");
         super.onPause();
+        context.unregisterReceiver(receiver);
         timer.cancel();
     }
 
     @Override
     public void onDetach() {
+        Log.d(TAG, "onDetach");
         super.onDetach();
         context.unregisterReceiver(receiver);
         timer.cancel();
@@ -174,7 +184,6 @@ public class CamFragment extends Fragment {
             Log.d(TAG, "download_Image: " + url);
             Bitmap bm = null;
             try {
-                String userCredentials = "edoardo"+":"+"Edoardo90";
                 String basicAuth = "Basic " + Base64.encodeToString(userCredentials.getBytes("UTF-8"), Base64.DEFAULT);
 
                 URL aURL = new URL(url);

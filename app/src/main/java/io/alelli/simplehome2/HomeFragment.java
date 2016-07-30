@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class HomeFragment extends Fragment {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +57,15 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        Button btnCam = (Button) view.findViewById(R.id.button_cam);
+        btnCam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new CamFragment();
+                openFragment(fragment);
+            }
+        });
+
         Button btnSettings = (Button) view.findViewById(R.id.button_settings);
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +88,7 @@ public class HomeFragment extends Fragment {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.replace(R.id.content_frame, fragment);
+            ft.addToBackStack(null);
             ft.commit();
         }
     }

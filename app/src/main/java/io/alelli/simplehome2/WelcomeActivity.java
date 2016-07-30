@@ -38,10 +38,16 @@ public class WelcomeActivity extends AppCompatActivity {
         final EditText urlEditText = (EditText) findViewById(R.id.dialog_profilo_url);
         final EditText usernameEditText = (EditText) findViewById(R.id.dialog_profilo_username);
         final EditText passwordEditText = (EditText) findViewById(R.id.dialog_profilo_password);
+        // CAM
+        final RadioButton metodoCamRadioHTTP = (RadioButton) findViewById(R.id.dialog_profilo_cam_metodo_http);
+        final RadioButton metodoCamRadioHTTPS = (RadioButton) findViewById(R.id.dialog_profilo_cam_metodo_https);
+        final EditText urlCamEditText = (EditText) findViewById(R.id.dialog_profilo_cam_url);
+        final EditText usernameCamEditText = (EditText) findViewById(R.id.dialog_profilo_cam_username);
+        final EditText passwordCamEditText = (EditText) findViewById(R.id.dialog_profilo_cam_password);
 
         Boolean hasError = false;
         String etichetta = etichettaEditText.getText().toString();
-        if (etichetta == null || "".equals(etichetta)) {
+        if ("".equals(etichetta)) {
             etichettaEditText.setError("Etichetta obbligatoria");
             hasError = true;
         }
@@ -64,13 +70,36 @@ public class WelcomeActivity extends AppCompatActivity {
         }
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-        if (password == null || "".equals(password)) {
+        if ("".equals(password)) {
+            passwordEditText.setError("Password obbligatoria");
+            hasError = true;
+        }
+        // CAM
+        String urlCam = "";
+        if (metodoCamRadioHTTP.isChecked()) {
+            urlCam = String.valueOf(metodoCamRadioHTTP.getText());
+        } else if (metodoCamRadioHTTPS.isChecked()) {
+            urlCam = String.valueOf(metodoCamRadioHTTPS.getText());
+        }
+        urlCam += urlCamEditText.getText().toString();
+        if (urlCam.charAt(url.length()-1) != '/') {
+            urlCam += "/";
+        }
+        try {
+            new URL(urlCam);
+        } catch (MalformedURLException malformedURLException) {
+            urlCamEditText.setError("URL non valido");
+            hasError = true;
+        }
+        String usernameCam = usernameCamEditText.getText().toString();
+        String passwordCam = passwordCamEditText.getText().toString();
+        if ("".equals(passwordCam)) {
             passwordEditText.setError("Password obbligatoria");
             hasError = true;
         }
 
         if(!hasError) {
-            Profilo profilo = new Profilo(etichetta, url, username, password);
+            Profilo profilo = new Profilo(etichetta, url, username, password, urlCam, usernameCam, passwordCam);
             profiloDAO.insert(profilo);
 
             final Intent intent = new Intent(context, MainActivity.class);
