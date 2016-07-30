@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class HomeFragment extends Fragment {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +53,15 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Fragment fragment = new InterruzioniFragment();
+                openFragment(fragment);
+            }
+        });
+
+        Button btnCam = (Button) view.findViewById(R.id.button_cam);
+        btnCam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new CamFragment();
                 openFragment(fragment);
             }
         });

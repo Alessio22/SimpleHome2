@@ -7,16 +7,24 @@ public class Profilo {
     private String username;
     private String password;
 
+    private String urlCam;
+    private String usernameCam;
+    private String passwordCam;
+
     public Profilo() {
         super();
     }
 
-    public Profilo(String etichetta, String url, String username, String password) {
+    public Profilo(String etichetta, String url, String username, String password,
+                   String urlCam, String usernameCam, String passwordCam) {
         super();
         this.etichetta = etichetta;
         this.url = url;
         this.username = username;
         this.password = password;
+        this.urlCam = urlCam;
+        this.usernameCam = usernameCam;
+        this.passwordCam = passwordCam;
     }
 
     public Long getId() {
@@ -57,6 +65,30 @@ public class Profilo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUrlCam() {
+        return urlCam;
+    }
+
+    public void setUrlCam(String urlCam) {
+        this.urlCam = urlCam;
+    }
+
+    public String getUsernameCam() {
+        return usernameCam;
+    }
+
+    public void setUsernameCam(String usernameCam) {
+        this.usernameCam = usernameCam;
+    }
+
+    public String getPasswordCam() {
+        return passwordCam;
+    }
+
+    public void setPasswordCam(String passwordCam) {
+        this.passwordCam = passwordCam;
     }
 
 }

@@ -20,13 +20,17 @@
     <string name="dialog_new_profile_title">Nuovo Profilo</string>
     <string name="dialog_new_profile_save">Salva</string>
     <string name="dialog_new_profile_close">Chiudi</string>
+    <string name="dialog_profilo_txt_etichetta">Etichetta:</string>
     <string name="dialog_profilo_txt_metodo">Metodo:</string>
     <string name="dialog_profilo_txt_metodo_http">HTTP://</string>
     <string name="dialog_profilo_txt_metodo_https">HTTPS://</string>
-    <string name="dialog_profilo_txt_etichetta">Etichetta:</string>
     <string name="dialog_profilo_txt_url">URL:</string>
     <string name="dialog_profilo_txt_username">Username:</string>
     <string name="dialog_profilo_txt_password">Password:</string>
+    <string name="dialog_profilo_cam_txt_metodo">Metodo videosorveglianza:</string>
+    <string name="dialog_profilo_cam_txt_url">URL videosorveglianza:</string>
+    <string name="dialog_profilo_cam_txt_username">Username videosorveglianza:</string>
+    <string name="dialog_profilo_cam_txt_password">Password videosorveglianza:</string>
 
     <string name="dialog_info_profile_title">Profilo</string>
     <string name="dialog_info_profile_delete">Delete</string>
@@ -48,4 +52,9 @@
     <string name="logo">logo</string>
     <string name="allarme_disattivato">disattivato</string>
     <string name="allarme_attivato">attivato</string>
+
+    <string name="cam_nav">Videosorveglianza</string>
+    <string name="cam_title_fragment">Videosorveglianza</string>
+    <string name="camPicAlt">Camera picture</string>
+
 </resources>

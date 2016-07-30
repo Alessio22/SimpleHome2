@@ -111,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
         PrimaryDrawerItem interruzioni = new PrimaryDrawerItem()
                 .withName(R.string.interruzioni_nav)
                 .withIcon(R.drawable.ic_dnd_forwardslash_24dp);
+        PrimaryDrawerItem cam = new PrimaryDrawerItem()
+                .withName(R.string.cam_nav)
+                .withIcon(R.drawable.ic_videocam_black_24dp);
         SecondaryDrawerItem settings = new SecondaryDrawerItem()
                 .withName(R.string.settings_nav).withTextColorRes(R.color.secondary_text)
                 .withIcon(R.drawable.ic_settings_24dp);
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
-                .addDrawerItems(home, luci, temperature, allarme, interruzioni, new DividerDrawerItem(), settings, about)
+                .addDrawerItems(home, luci, temperature, allarme, interruzioni, cam, new DividerDrawerItem(), settings, about)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -142,11 +145,14 @@ public class MainActivity extends AppCompatActivity {
                             case 5:
                                 openFragment(new InterruzioniFragment(), getString(R.string.interruzioni_title_fragment));
                                 break;
-                            case 7:
+                            case 6:
+                                openFragment(new CamFragment(), getString(R.string.cam_title_fragment));
+                                break;
+                            case 8:
                                 final Intent intent = new Intent(context, SettingsActivity.class);
                                 startActivity(intent);
                                 break;
-                            case 8:
+                            case 9:
                                 openFragment(new InfoFragment(), getString(R.string.info_title_fragment));
                                 break;
                         }
@@ -198,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     boolean dblClickToExit = false;
-
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen()) {

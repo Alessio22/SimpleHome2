@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -54,12 +53,12 @@ public class LuciFragment extends Fragment {
 
                     String message = "Aggiornamento completato";
                     if(getView() != null) {
-                        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                        //Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT).show();
                     }
                     swipeContainer.setRefreshing(false);
                 } else {
                     if(getView() != null) {
-                        Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
+                        //Snackbar.make(getView(), errore, Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -76,11 +75,11 @@ public class LuciFragment extends Fragment {
                         message = "Luce " + nome + " " + stato;
                     }
                     if(getView() != null) {
-                        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+                        //Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
                     }
                 } else {
                     if(getView() != null) {
-                        Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
+                        //Snackbar.make(getView(), errore, Snackbar.LENGTH_LONG).show();
                     }
                 }
             }
