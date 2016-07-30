@@ -21,7 +21,8 @@
             android:layout_height="wrap_content"
             android:text="@string/dialog_profilo_txt_etichetta"
             android:id="@+id/dialog_profilo_txt_etichetta"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginTop="60dp" />
 
         <EditText
             android:layout_width="match_parent"
