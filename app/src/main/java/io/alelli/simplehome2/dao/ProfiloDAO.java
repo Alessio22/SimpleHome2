@@ -61,7 +61,10 @@ public class ProfiloDAO extends SQLiteOpenHelper {
                 TABLE_PROFILO_ETICHETTA + " TEXT," +
                 TABLE_PROFILO_URL + " TEXT," +
                 TABLE_PROFILO_USERNAME + " TEXT," +
-                TABLE_PROFILO_PASSWORD + " TEXT" +
+                TABLE_PROFILO_PASSWORD + " TEXT," +
+                TABLE_PROFILO_URL_CAM + " TEXT," +
+                TABLE_PROFILO_USERNAME_CAM + " TEXT," +
+                TABLE_PROFILO_PASSWORD_CAM + " TEXT" +
                 ")");
     }
 

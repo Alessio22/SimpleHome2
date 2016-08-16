@@ -82,9 +82,6 @@ public class WelcomeActivity extends AppCompatActivity {
             urlCam = String.valueOf(metodoCamRadioHTTPS.getText());
         }
         urlCam += urlCamEditText.getText().toString();
-        if (urlCam.charAt(url.length()-1) != '/') {
-            urlCam += "/";
-        }
         try {
             new URL(urlCam);
         } catch (MalformedURLException malformedURLException) {
