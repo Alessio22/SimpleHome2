@@ -8,8 +8,8 @@ android {
         applicationId "io.alelli.simplehome2"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 11
-        versionName "1.0.7.1"
+        versionCode 12
+        versionName "1.0.7.2"
     }
     buildTypes {
         release {
